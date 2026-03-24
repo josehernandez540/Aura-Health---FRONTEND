@@ -7,15 +7,10 @@ export default function PrivateRoute({ children }) {
     token,
     isAuthenticated,
     mustChangePassword,
+    hasHydrated
   } = useAuthStore();
 
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  useEffect(() => {
-    setIsHydrated(true);
-  }, []);
-
-  if (!isHydrated) return null;
+  if (!hasHydrated) return null;
 
   if (!token || !isAuthenticated) {
     return <Navigate to="/login" replace />;

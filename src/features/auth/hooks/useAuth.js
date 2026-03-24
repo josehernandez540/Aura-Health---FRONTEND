@@ -19,13 +19,14 @@ export const useAuth = () => {
       if (!token) {
         throw new Error('No token received');
       }
+      
+      login({ token, userId: user.id, role: user.role, mustChangePassword });
 
       if (mustChangePassword) {
         navigate('/change-password');
         return;
       }
       
-      login({ token, userId: user.id, role: user.role, mustChangePassword });
       navigate('/dashboard');
 
     } catch (error) {
