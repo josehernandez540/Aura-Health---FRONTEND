@@ -1,19 +1,31 @@
-import { createBrowserRouter } from "react-router-dom";
-import MainLayout from "../components/layout/MainLayout";
+import { createBrowserRouter } from 'react-router-dom';
+import RootRedirect from './RootRedirect.jsx';
+import PrivateRoute from './PrivateRoute.jsx';
+
+import LoginForm from '../features/auth/components/LoginForm.jsx';
+
+const Dashboard = () => <div>Dashboard</div>;
+const ChangePassword = () => <div>Cambiar contraseña</div>;
 
 export const router = createBrowserRouter([
   {
-    path: "/",
-    element: <MainLayout />,
-    children: [
-      {
-        path: "",
-        element: <div>Home</div>,
-      },
-      {
-        path: "login",
-        element: <div>Pagina de login</div>,
-      },
-    ],
+    path: '/',
+    element: <RootRedirect />,
+  },
+  {
+    path: '/login',
+    element: <LoginForm />,
+  },
+  {
+    path: '/change-password',
+    element: <ChangePassword />,
+  },
+  {
+    path: '/dashboard',
+    element: (
+      <PrivateRoute>
+        <Dashboard />
+      </PrivateRoute>
+    ),
   },
 ]);
