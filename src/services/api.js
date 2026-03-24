@@ -15,4 +15,21 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    const { logout } = useAuthStore.getState();
+
+    if (error.response?.status === 401) {
+      console.warn('Token inválido o expirado');
+
+      logout();
+
+      window.location.href = '/login';
+    }
+    
+    return Promise.reject(error);
+  }
+);
+
 export default api;
