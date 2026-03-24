@@ -1,7 +1,9 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import RootRedirect from './RootRedirect.jsx';
 import PrivateRoute from './PrivateRoute.jsx';
+import ForceChangePasswordRoute from './ForceChangePasswordRoute.jsx';
 import LoginForm from '../features/auth/components/LoginForm.jsx';
+import ChangePasswordForm from '../features/auth/change-password/ChangePasswordForm.jsx';
 import RoleGuard from './RoleGuard';
 import Unauthorized from '../pages/Unauthorized.jsx';
 import AuditPage from '../pages/AuditPage.jsx';
@@ -9,7 +11,6 @@ import NotFound from '../pages/notFound.jsx';
 import MainLayout from '../components/layout/MainLayout/MainLayout.js';
 
 const Dashboard = () => <div>Dashboard</div>;
-const ChangePassword = () => <div>Cambiar contraseña</div>;
 
 export const router = createBrowserRouter([
   {
@@ -22,7 +23,12 @@ export const router = createBrowserRouter([
   },
   {
     path: '/change-password',
-    element: <ChangePassword />,
+    element:
+    <>
+      <ForceChangePasswordRoute>
+        <ChangePasswordForm />
+      </ForceChangePasswordRoute>
+    </>
   },
   {
     element: (

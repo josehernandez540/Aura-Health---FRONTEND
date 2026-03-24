@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useAuditLogs } from "../hook/useAuditLogs";
 import AuditDetailModal from "./AuditModal";
 import "./auditTable.css";
+import AuditFilterBar from "./AuditFilterBar";
 
 const AuditTable = () => {
   const { logs, loading, page, totalPages, filters, setFilters, setPage } =
@@ -64,49 +65,15 @@ const AuditTable = () => {
 
   return (
     <>
-      <div className="audit-filters-bar">
-        <div className="filter-input-wrapper">
-          <input
-            type="text"
-            name="search"
-            value={filters.search}
-            onChange={handleFilterChange}
-            placeholder="Buscar acción, usuario o entidad..."
-            className="search-input"
-          />
-        </div>
-
-        <div className="filter-select-wrapper">
-          <select
-            name="action"
-            value={filters.action}
-            onChange={handleFilterChange}
-            className="action-select"
-          >
-            <option value="">Todas las actividades</option>
-            <option value="USER_LOGIN">User Login</option>
-            <option value="USER_CREATED">User Created</option>
-            <option value="USER_PASSWORD_CHANGED">Password Changed</option>
-            <option value="APPOINTMENT_CREATED">Appt. Created</option>
-            <option value="APPOINTMENT_CANCELLED">Appt. Cancelled</option>
-            <option value="TREATMENT_APPROVED">Treatment Approved</option>
-            <option value="DOCTOR_STATUS_CHANGED">Doctor Changed</option>
-            <option value="PATIENT_CREATED">Patient Created</option>
-            <option value="PATIENT_UPDATED">Patient Updated</option>
-            <option value="PATIENT_STATUS_CHANGED">Patient Changed</option>
-          </select>
-        </div>
-
-        <div className="filter-date-wrapper">
-          <input
-            type="date"
-            name="date"
-            value={filters.date}
-            onChange={handleFilterChange}
-            className="date-input"
-          />
-        </div>
-      </div>
+      <AuditFilterBar
+        filters={filters}
+        onChange={(name, value) =>
+          setFilters((prev) => ({
+            ...prev,
+            [name]: value,
+          }))
+        }
+      />
 
       <div className="audit-container">
         <div className="audit-header">
