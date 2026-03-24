@@ -1,0 +1,21 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.page-subtitle {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.page-actions {
+  display: flex;
+  gap: 0.5rem;
+}

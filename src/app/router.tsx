@@ -1,10 +1,12 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Outlet } from 'react-router-dom';
 import RootRedirect from './RootRedirect.jsx';
 import PrivateRoute from './PrivateRoute.jsx';
 import LoginForm from '../features/auth/components/LoginForm.jsx';
 import RoleGuard from './RoleGuard';
-import Unauthorized from '../components/pages/Unauthorized.jsx';
-
+import Unauthorized from '../pages/Unauthorized.jsx';
+import AuditPage from '../pages/AuditPage.jsx';
+import NotFound from '../pages/notFound.jsx';
+import MainLayout from '../components/layout/MainLayout/MainLayout.js';
 
 const Dashboard = () => <div>Dashboard</div>;
 const ChangePassword = () => <div>Cambiar contraseña</div>;
@@ -23,29 +25,46 @@ export const router = createBrowserRouter([
     element: <ChangePassword />,
   },
   {
-    path: '/dashboard',
     element: (
       <PrivateRoute>
-        <RoleGuard allowedRoles={['ADMIN']}>
-          <Dashboard />
-        </RoleGuard>
+        <MainLayout>
+          <Outlet /> 
+        </MainLayout>
       </PrivateRoute>
     ),
-  },
-  {
-    path: '/citas',
-    element: (
-      <PrivateRoute>
-        <RoleGuard allowedRoles={['DOCTOR','ADMIN']}>
-          <Dashboard />
-        </RoleGuard>
-      </PrivateRoute>
-    ),
+    children: [
+      {
+        path: '/dashboard',
+        element: (
+          <RoleGuard allowedRoles={['ADMIN','DOCTOR']}>
+            <Dashboard />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: '/citas',
+        element: (
+          <RoleGuard allowedRoles={['DOCTOR', 'ADMIN']}>
+            <Dashboard />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: '/audit',
+        element: (
+          <RoleGuard allowedRoles={['ADMIN']}>
+            <AuditPage />
+          </RoleGuard>
+        ),
+      },
+    ],
   },
   {
     path: '/unauthorized',
-    element: (
-         <Unauthorized/>
-    ),
+    element: <Unauthorized />,
+  },
+  {
+  path: '*',
+    element: <NotFound/>,
   }
 ]);

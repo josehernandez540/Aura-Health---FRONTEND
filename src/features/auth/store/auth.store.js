@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { decodeJWT } from '../../../utils/jwt'
 
 export const useAuthStore = create(
   persist(
