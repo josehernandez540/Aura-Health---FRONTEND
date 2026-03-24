@@ -8,12 +8,14 @@ export const useAuthStore = create(
       userId: null,
       role: null,
       isAuthenticated: false,
+      mustChangePassword: false,
 
-      login: ({ token, userId, role }) => {
+      login: ({ token, userId, role, mustChangePassword }) => {
         set({
           token,
           userId,
           role,
+          mustChangePassword,
           isAuthenticated: true,
         });
       },
@@ -23,6 +25,7 @@ export const useAuthStore = create(
           token: null,
           userId: null,
           role: null,
+          mustChangePassword: false,
           isAuthenticated: false,
         });
       },

@@ -25,7 +25,7 @@ export const useAuth = () => {
         return;
       }
       
-      login({ token, userId: user.id, role: user.role });
+      login({ token, userId: user.id, role: user.role, mustChangePassword });
       navigate('/dashboard');
 
     } catch (error) {
