@@ -21,10 +21,7 @@ api.interceptors.response.use(
     const { logout } = useAuthStore.getState();
 
     if (error.response?.status === 401) {
-      console.warn('Token inválido o expirado');
-
       logout();
-
       window.location.href = '/login';
     }
     
