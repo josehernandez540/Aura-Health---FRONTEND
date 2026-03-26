@@ -7,10 +7,12 @@ import { useAuthStore } from '../store/auth.store';
 import Input from '../../../components/ui/Inputs/Input';
 import Button from '../../../components/ui/Button/Button';
 import './changePassword.css'; 
+import { useUIStore } from "../../../store/ui.store";
 
 export default function ChangePasswordForm() {
   const navigate = useNavigate();
-  const { completePasswordChange } = useAuthStore();
+  const showToast = useUIStore((state) => state.showToast);
+  const setMustChangePassword = useAuthStore((state) => state.setMustChangePassword);
 
   const {
     register,
@@ -32,14 +34,17 @@ export default function ChangePasswordForm() {
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
       });
-
-      completePasswordChange(); 
-
+      
+      setMustChangePassword(false);
+      showToast("Contraseña actualizada correctamente", "success");
       navigate("/dashboard");
+      
     } catch (err) {
-      setError("root", { 
-        message: err.response?.data?.message || "Error al cambiar la contraseña. Verifica tus datos." 
-      });
+      const message =
+        err.response?.data?.message ||
+        "Error al cambiar la contraseña";
+      showToast(message, "error");
+      setError("root", { message });
     }
   };
 

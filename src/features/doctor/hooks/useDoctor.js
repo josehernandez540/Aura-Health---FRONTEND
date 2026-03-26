@@ -2,8 +2,11 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createDoctorSchema } from "../schemas/doctor.schema";
 import { createDoctor } from "../services/doctor.service";
+import { useUIStore } from "../../../store/ui.store";
 
 export const useDoctor = (onSuccess) => {
+  const showToast = useUIStore((state) => state.showToast);
+
   const {
     register,
     handleSubmit,
@@ -16,14 +19,14 @@ export const useDoctor = (onSuccess) => {
   const onSubmit = async (data) => {
     try {
       await createDoctor(data);
+      showToast("Médico creado correctamente");
       if (onSuccess) onSuccess();
       reset();
-      alert("Médico creado correctamente");
     } catch (error) {
       const message = error.response?.status === 409 
         ? "El email ya está registrado" 
         : "Error creando médico";
-      alert(message);
+        showToast(message,"error");
     }
   };
 

@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { decodeJWT } from '../../../utils/jwt'
+import { useUIStore } from '../../../store/ui.store';
 
 export const useAuthStore = create(
   persist(
@@ -13,6 +14,8 @@ export const useAuthStore = create(
       hasHydrated: false,
       tokenExpiration: null,
       logoutTimer: null,
+
+      setMustChangePassword: (value) => set({ mustChangePassword: value }),
 
       login: ({ token, userId, role, mustChangePassword }) => {
         const decoded = decodeJWT(token);
@@ -35,12 +38,15 @@ export const useAuthStore = create(
         get().startLogoutTimer();
       },
 
-      logout: () => {
+      logout: (reason = "manual") => {
         const { logoutTimer } = get();
 
         if (logoutTimer) {
           clearTimeout(logoutTimer);
         }
+        
+        const actualReason = typeof reason === "string" ? reason : "manual";
+
         set({
           token: null,
           userId: null,
@@ -48,6 +54,17 @@ export const useAuthStore = create(
           mustChangePassword: false,
           isAuthenticated: false,
         });
+
+        const ui = useUIStore.getState();
+
+      if (reason === "expired") {
+        ui.showToast("Tu sesión ha expirado", "danger");
+      }
+
+      if (reason === "manual") {
+        console.log("manual")
+        ui.showToast("Sesión cerrada correctamente", "info");
+      }
       },
 
       startLogoutTimer: () => {
@@ -58,16 +75,13 @@ export const useAuthStore = create(
         const timeLeft = tokenExpiration - Date.now();
 
         if (timeLeft <= 0) {
-          logout();
-          setTimeout(() => {
-            alert('Tu sesión ha expirado');
-          }, timeLeft - 5000);
+          logout("expired");
           window.location.href = '/login';
           return;
         }
 
         const timer = setTimeout(() => {
-          logout();
+          logout("expired");
           window.location.href = '/login';
         }, timeLeft);
 

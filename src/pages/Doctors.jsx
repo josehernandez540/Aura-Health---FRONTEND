@@ -6,9 +6,11 @@ import MedicoCardsGrid from "../features/doctor/components/MedicoCardsGrid";
 import MedicoFilterBar from "../features/doctor/components/MedicoFilterBar";
 import { useMedicos } from "../features/doctor/hooks/useDoctorsList";
 
+
 const DoctorPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { medicos, loading, handleToggleStatus, fetchMedicos } = useMedicos();
+
   
   const [filters, setFilters] = useState({
     search: "",
@@ -21,7 +23,7 @@ const DoctorPage = () => {
   };
 
   return (
-    <div style={{ padding: "0 1rem 2rem 1rem" }}>
+    <>
       <PageHeader
         title="Gestión de Medicos"
         subtitle="Panel de administración y monitoreo"
@@ -49,7 +51,7 @@ const DoctorPage = () => {
         setIsModalOpen={setIsModalOpen} 
         onSuccess={fetchMedicos} 
       />
-    </div>
+    </>
   );
 };
 

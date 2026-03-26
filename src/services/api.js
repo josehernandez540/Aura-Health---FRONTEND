@@ -21,7 +21,7 @@ api.interceptors.response.use(
     const { logout } = useAuthStore.getState();
 
     if (error.response?.status === 401) {
-      logout();
+      logout("expired");
       window.location.href = '/login';
     }
     

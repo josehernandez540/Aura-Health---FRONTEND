@@ -28,8 +28,21 @@
   opacity: 0.7;
 }
 
+.doctor-card.inactive .doctor-avatar {
+  opacity: 0.7;
+  background: gray;
+}
+
+.doctor-card.inactive:hover {
+  border-color: #787889;
+}
+
+.doctor-card.inactive button {
+  opacity: 0.7;
+}
+
 .doctor-card:hover {
-  border-color: #6366f1; /* O tu var(--accent) */
+  border-color: #6366f1;
   transform: translateY(-2px);
 }
 
@@ -58,16 +71,22 @@
   font-weight: 600;
   margin: 0;
   color: white;
+  
+  white-space: nowrap; 
+  overflow: hidden;         
+  text-overflow: ellipsis;  
+  display: block; 
+  width: 100%;
 }
 
 .doctor-meta span {
   font-size: 0.8rem;
-  color: #a1a1aa; /* var(--txt2) */
+  color: #a1a1aa; 
 }
 
 .text-muted {
   font-size: 0.75rem;
-  color: #71717a; /* var(--txt3) */
+  color: #71717a; 
 }
 
 .doctor-stats {

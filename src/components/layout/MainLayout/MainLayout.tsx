@@ -3,6 +3,7 @@ import Sidebar from '../SideBar/Sidebar';
 import Navbar from '../NavBar/Navbar';
 import './MainLayout.css';
 
+
 const MainLayout = ({ children }) => {
   return (
     <div className="app">

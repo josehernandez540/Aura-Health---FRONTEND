@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { getMedicos, toggleMedicoStatus } from "../services/doctor.service";
+import { useUIStore } from "../../../store/ui.store";
 
 export const useMedicos = () => {
-  const [medicos, setMedicos] = useState([]);
-  const [loading, setLoading] = useState(true);
+    const [medicos, setMedicos] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const showToast = useUIStore((state) => state.showToast);
+    
 
   const fetchMedicos = async () => {
     try {
@@ -23,9 +26,10 @@ export const useMedicos = () => {
 
     try {
       await toggleMedicoStatus(id);
+      showToast("Estado de Medico Cambiado");
     } catch (error) {
       setMedicos(originalMedicos);
-      alert("No se pudo cambiar el estado");
+      showToast("No se pudo cambiar el estado del Medico", "error");
     }
   };
 

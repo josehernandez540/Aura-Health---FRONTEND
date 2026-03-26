@@ -2,7 +2,7 @@ import React from 'react';
 import DataTable from "../../../components/common/Datatable/Datatable";
 import Button from "../../../components/ui/Button/Button"; // Asumiendo que esta es la ruta
 
-const MedicoTable = ({ medicos, loading, handleToggleStatus }) => {
+const MedicoTable = ({ medicos, loading, onToggleStatus }) => {
 
   const avatarColors = ["#6366f1", "#10b981", "#f59e0b", "#3b82f6", "#ec4899"];
 
@@ -36,7 +36,7 @@ const MedicoTable = ({ medicos, loading, handleToggleStatus }) => {
           <input 
             type="checkbox" 
             checked={medico.is_active} 
-            onChange={() => handleToggleStatus(medico.id)}
+            onChange={() => onToggleStatus(medico.id)}
           />
           <span className="slider"></span>
         </label>

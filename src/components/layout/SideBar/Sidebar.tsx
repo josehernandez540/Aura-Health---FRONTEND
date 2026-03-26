@@ -9,7 +9,6 @@ const Sidebar = () => {
 
   return (
     <aside className="sidebar">
-      {/* 🔹 BRAND */}
       <div className="brand">
         <div className="brand-icon">
           <img src="/assets/logo.png" height="30" />
