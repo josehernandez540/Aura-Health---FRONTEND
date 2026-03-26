@@ -2,8 +2,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '../schemas/login.schema';
 import { useAuth } from '../hooks/useAuth';
-import Input from '../../../components/ui/Input';
-import Button from '../../../components/ui/Button';
+import Input from '../../../components/ui/Inputs/Input';
+import Button from '../../../components/ui/Button/Button';
 import './login.css';
 
 export default function LoginForm() {

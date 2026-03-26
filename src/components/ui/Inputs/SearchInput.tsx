@@ -1,3 +1,5 @@
+import './inputs.css';
+
 const SearchInput = ({ value, onChange, placeholder }) => {
   return (
     <div className="filter-input-wrapper">

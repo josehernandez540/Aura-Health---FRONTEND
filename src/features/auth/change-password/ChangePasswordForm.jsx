@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { changePasswordSchema } from './changePassword.schema';
 import { changePassword } from '../services/auth.service';
 import { useAuthStore } from '../store/auth.store';
-import Input from '../../../components/ui/Input';
-import Button from '../../../components/ui/Button';
+import Input from '../../../components/ui/Inputs/Input';
+import Button from '../../../components/ui/Button/Button';
 import './changePassword.css'; 
 
 export default function ChangePasswordForm() {

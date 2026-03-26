@@ -1,12 +1,14 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
 import RootRedirect from './RootRedirect.jsx';
 import PrivateRoute from './PrivateRoute.jsx';
+import PublicRoute from './PublicRoute.jsx';
 import ForceChangePasswordRoute from './ForceChangePasswordRoute.jsx';
 import LoginForm from '../features/auth/components/LoginForm.jsx';
 import ChangePasswordForm from '../features/auth/change-password/ChangePasswordForm.jsx';
 import RoleGuard from './RoleGuard';
 import Unauthorized from '../pages/Unauthorized.jsx';
 import AuditPage from '../pages/AuditPage.jsx';
+import DoctorPage from '../pages/Doctors.jsx';
 import NotFound from '../pages/notFound.jsx';
 import MainLayout from '../components/layout/MainLayout/MainLayout.js';
 
@@ -19,7 +21,10 @@ export const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <LoginForm />,
+    element: 
+    <PublicRoute>
+      <LoginForm />
+    </PublicRoute>,
   },
   {
     path: '/change-password',
@@ -60,6 +65,14 @@ export const router = createBrowserRouter([
         element: (
           <RoleGuard allowedRoles={['ADMIN']}>
             <AuditPage />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: '/doctors',
+        element: (
+          <RoleGuard allowedRoles={['ADMIN']}>
+            <DoctorPage />
           </RoleGuard>
         ),
       },

@@ -1,3 +1,5 @@
+import './inputs.css'
+
 const DateInput = ({ value, onChange }) => {
   return (
     <div className="filter-date-wrapper">

@@ -1,6 +1,6 @@
-import SearchInput from "../../../components/ui/SearchInput";
-import SelectInput from "../../../components/ui/SelectInput";
-import DateInput from "../../../components/ui/DateInput";
+import SearchInput from "../../../components/ui/Inputs/SearchInput";
+import SelectInput from "../../../components/ui/Inputs/SelectInput";
+import DateInput from "../../../components/ui/Inputs/DateInput";
 
 const AuditFilterBar = ({ filters, onChange }) => {
   const handleChange = (name) => (e) => {

@@ -5,6 +5,11 @@
   margin-bottom: 1.5rem;
 }
 
+.page-header button {
+  max-width: 120px;
+  max-height: 40px;
+}
+
 .page-title {
   font-size: 1.8rem;
   font-weight: 600;

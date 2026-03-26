@@ -32,6 +32,7 @@ const Navbar = () => {
     if (path.includes('audit')) return 'Auditoría';
     if (path.includes('dashboard')) return 'Dashboard';
     if (path.includes('patients')) return 'Pacientes';
+    if (path.includes('doctors')) return 'Medicos';
 
     return 'Panel';
   };

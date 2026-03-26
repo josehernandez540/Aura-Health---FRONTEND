@@ -1,7 +1,8 @@
 import React from "react";
 import "./pageHeader.css";
+import Button from "../ui/Button/Button";
 
-const PageHeader = ({ title, subtitle, actions }) => {
+const PageHeader = ({ title, subtitle, actions, onClick, textButton = "Crear"}) => {
   return (
     <div className="page-header">
       <div>
@@ -10,6 +11,9 @@ const PageHeader = ({ title, subtitle, actions }) => {
       </div>
 
       {actions && <div className="page-actions">{actions}</div>}
+
+      {onClick && <Button children={textButton} onClick={onClick}/>}
+
     </div>
   );
 };
