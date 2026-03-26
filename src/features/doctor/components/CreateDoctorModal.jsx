@@ -1,7 +1,3 @@
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createDoctorSchema } from "../schemas/doctor.schema";
-import { createDoctor } from "../services/doctor.service";
 import Input from "../../../components/ui/Inputs/Input";
 import SelectInput from "../../../components/ui/Inputs/SelectInput";
 import Button from "../../../components/ui/Button/Button";
@@ -9,10 +5,11 @@ import Modal from "../../../components/ui/Modal/Modal"
 import Alert from "../../../components/ui/Alert/Alert"
 import { useDoctor } from "../hooks/useDoctor";
 
-const CreateDoctorForm = ({ isModalOpen, setIsModalOpen }) => {
+const CreateDoctorForm = ({ isModalOpen, setIsModalOpen, onSuccess }) => {
 
   const { register, handleSubmit, errors, isSubmitting } = useDoctor(() => {
     setIsModalOpen(false);
+    if (onSuccess) onSuccess(); 
   });
 
   return (

@@ -11,6 +11,10 @@
     brightness(95%) contrast(95%);
 }
 
+.icon-img-color {
+  filter: invert(48%) sepia(98%) saturate(749%) hue-rotate(203deg)
+    brightness(95%) contrast(95%);
+}
 .form-group {
   margin-bottom: 18px;
 }

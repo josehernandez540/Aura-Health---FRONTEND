@@ -10,15 +10,6 @@ const AuditTable = () => {
 
   const [selectedLog, setSelectedLog] = useState(null);
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-
-    setFilters((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   const filteredLogs = logs.filter((log) => {
     const search = filters.search.toLowerCase();
 
