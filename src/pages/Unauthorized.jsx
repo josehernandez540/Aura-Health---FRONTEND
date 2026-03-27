@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import './unauthorized.css';
+import Button from '../components/ui/Button/Button.tsx'
 
 const Unauthorized = () => {
   const navigate = useNavigate();
@@ -20,12 +21,12 @@ const Unauthorized = () => {
         <p>Lo sentimos, no tienes los permisos necesarios para ver esta sección de <strong>Aura Health</strong>.</p>
         
         <div className="unauthorized-actions">
-          <button className="btn-back" onClick={() => navigate('/dashboard')}>
+          <Button variant="primary" onClick={() => navigate('/dashboard')}>
             Volver al Inicio
-          </button>
-          <button className="btn-secondary" onClick={() => window.history.back()}>
+          </Button>
+          <Button variant="secondary" onClick={() => window.history.back()}>
             Regresar
-          </button>
+          </Button>
         </div>
       </div>
     </div>

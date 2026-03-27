@@ -1,5 +1,4 @@
 import React, { forwardRef } from 'react';
-import './inputs.css';
 
 const Input = forwardRef(({ label, error, ...props }, ref) => {
   return (

@@ -1,5 +1,4 @@
 import React, { forwardRef } from "react";
-import './inputs.css';
 
 const SelectInput = forwardRef(
   ({ label, options, error, ...props }, ref) => {

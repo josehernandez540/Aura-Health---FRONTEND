@@ -1,63 +1,58 @@
 .alert {
   display: flex;
+  align-items: center;
   gap: 12px;
   padding: 14px 16px;
-  border-radius: var(--radius-sm, 8px);
-  font-size: 0.87rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-base);
   margin-bottom: 16px;
   line-height: 1.5;
-  align-items: flex-start; 
-  align-items: center;
 }
-
 .alert-icon-container {
   flex-shrink: 0;
   display: flex;
-  margin-top: 2px;
 }
-
 .alert-icon-img {
   width: 18px;
   height: 18px;
   object-fit: contain;
   display: block;
 }
-
 .alert-content {
   flex: 1;
-  color: white;
+  color: var(--txt);
 }
 
-.alert-info { 
-  background: rgba(59, 130, 246, 0.1); 
-  border-left: 3px solid var(--accent, #3b82f6); 
+.alert-info {
+  background: rgba(59, 130, 246, 0.1);
+  border-left: 3px solid var(--accent);
 }
-.alert-success { 
-  background: rgba(16, 185, 129, 0.1); 
-  border-left: 3px solid var(--success, #10b981); 
+.alert-success {
+  background: rgba(16, 185, 129, 0.1);
+  border-left: 3px solid var(--success);
 }
-.alert-warning { 
-  background: rgba(245, 158, 11, 0.1); 
-  border-left: 3px solid var(--warning, #f59e0b); 
+.alert-warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-left: 3px solid var(--warning);
 }
-.alert-danger { 
-  background: rgba(239, 68, 68, 0.1); 
-  border-left: 3px solid var(--danger, #ef4444); 
+.alert-danger {
+  background: rgba(239, 68, 68, 0.1);
+  border-left: 3px solid var(--danger);
 }
-
 
 .alert-info .alert-icon-img {
-  filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(200deg) brightness(100%) contrast(100%);
+  filter: invert(42%) sepia(93%) saturate(1352%) hue-rotate(200deg)
+    brightness(100%) contrast(100%);
 }
-
 .alert-success .alert-icon-img {
-  filter: invert(61%) sepia(54%) saturate(542%) hue-rotate(110deg) brightness(95%) contrast(92%);
+  filter: invert(61%) sepia(54%) saturate(542%) hue-rotate(110deg)
+    brightness(95%) contrast(92%);
 }
-
 .alert-warning .alert-icon-img {
-  filter: invert(72%) sepia(85%) saturate(834%) hue-rotate(3deg) brightness(103%) contrast(96%);
+  filter: invert(72%) sepia(85%) saturate(834%) hue-rotate(3deg)
+    brightness(103%) contrast(96%);
 }
-
 .alert-danger .alert-icon-img {
-  filter: invert(39%) sepia(74%) saturate(2870%) hue-rotate(340deg) brightness(95%) contrast(110%);
+  filter: invert(39%) sepia(74%) saturate(2870%) hue-rotate(340deg)
+    brightness(95%) contrast(110%);
 }

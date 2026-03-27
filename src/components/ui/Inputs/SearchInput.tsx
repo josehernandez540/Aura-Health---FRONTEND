@@ -1,4 +1,3 @@
-import './inputs.css';
 
 const SearchInput = ({ value, onChange, placeholder }) => {
   return (

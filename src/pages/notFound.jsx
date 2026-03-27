@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import './notFound.css';
+import Button from '../components/ui/Button/Button.tsx'
 
 const NotFound = () => {
   const navigate = useNavigate();
@@ -20,12 +21,12 @@ const NotFound = () => {
         <p>Parece que has explorado más allá de los límites conocidos de <strong>Aura Health</strong>. Esta página no existe o ha cambiado de lugar.</p>
         
         <div className="notfound-actions">
-          <button className="btn-safe-zone" onClick={() => navigate('/dashboard')}>
+          <Button variant="success" onClick={() => navigate('/dashboard')}>
             Volver a Zona Segura
-          </button>
-          <button className="btn-secondary" onClick={() => window.history.back()}>
+          </Button>
+          <Button variant='secondary' onClick={() => window.history.back()}>
             Regresar
-          </button>
+          </Button>
         </div>
       </div>
     </div>

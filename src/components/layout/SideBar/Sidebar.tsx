@@ -51,7 +51,7 @@ const Sidebar = () => {
       </nav>
 
       <div className="sidebar-footer">
-        <div className="user-card">
+        <div className="sidebar-user-card">
           <div className="avatar">{role?.slice(0, 2)}</div>
 
           <div className="user-info">

@@ -7,7 +7,7 @@ import AuditFilterBar from "./AuditFilterBar";
 const AuditTable = () => {
   const { logs, loading, page, totalPages, filters, setFilters, setPage } =
     useAuditLogs();
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedLog, setSelectedLog] = useState(null);
 
   const filteredLogs = logs.filter((log) => {
@@ -82,7 +82,10 @@ const AuditTable = () => {
                 <div
                   key={log.id}
                   className="audit-item"
-                  onClick={() => setSelectedLog(log)}
+                  onClick={() => {
+                    setSelectedLog(log);
+                    setIsModalOpen(true);
+                  }}
                   style={{ cursor: "pointer" }}
                 >
                   <div className="audit-col-action">
@@ -150,12 +153,11 @@ const AuditTable = () => {
             <img src="icons/next.svg" alt="" className="icon-img" />
           </button>
         </div>
-        {selectedLog && (
-          <AuditDetailModal
-            log={selectedLog}
-            onClose={() => setSelectedLog(null)}
-          />
-        )}
+        <AuditDetailModal
+          log={selectedLog}
+          isModalOpen={isModalOpen}
+          setIsModalOpen={setIsModalOpen}
+        />
       </div>
     </>
   );

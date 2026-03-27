@@ -2,6 +2,7 @@
   display: flex;
   min-height: 100vh;
 }
+
 .login-left {
   flex: 1;
   background: var(--surface);
@@ -40,6 +41,7 @@
   bottom: -80px;
   right: -80px;
 }
+
 .login-brand {
   position: relative;
   z-index: 1;
@@ -66,8 +68,9 @@
   color: var(--txt2);
   max-width: 300px;
   line-height: 1.6;
-  font-size: 0.95rem;
+  font-size: var(--fs-md);
 }
+
 .login-right {
   width: 480px;
   display: flex;
@@ -86,6 +89,6 @@
 }
 .login-box > p {
   color: var(--txt2);
-  font-size: 0.88rem;
+  font-size: var(--fs-base);
   margin-bottom: 32px;
 }

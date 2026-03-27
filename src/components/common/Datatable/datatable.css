@@ -1,23 +1,20 @@
-
 .custom-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px;
+  padding: var(--gap);
   margin-bottom: 20px;
 }
-
 .card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: var(--gap);
 }
-
 .card-title {
   font-size: 1rem;
   font-weight: 600;
-  color: white;
+  color: var(--txt);
 }
 
 .reusable-table {
@@ -29,21 +26,23 @@
 thead th {
   text-align: left;
   padding: 8px 10px;
-  font-size: 0.7rem;
+  font-size: var(--fs-xs);
   text-transform: uppercase;
   color: var(--txt3);
   border-bottom: 1px solid var(--border);
 }
+.th-sortable:hover {
+  color: var(--txt);
+  background: rgba(255, 255, 255, 0.05);
+}
 
 tbody tr {
   border-bottom: 1px solid var(--border);
-  transition: background 0.3s ease;
+  transition: background var(--t-slow);
 }
-
 tbody tr:hover {
   background: rgba(255, 255, 255, 0.02);
 }
-
 .row-loading {
   opacity: 0.4;
   pointer-events: none;
@@ -51,44 +50,12 @@ tbody tr:hover {
 
 td {
   padding: 10px;
-  font-size: 0.85rem;
+  font-size: var(--fs-base);
   vertical-align: middle;
-  color: #e2e8f0;
+  color: var(--txt);
 }
 
-.truncate {
-  display: block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.flex {
-  display: flex;
-}
-.items-center {
-  align-items: center;
-}
-.justify-end {
-  justify-content: flex-end;
-}
-.gap-2 {
-  gap: 8px;
-}
-
-.avatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  flex-shrink: 0;
-  color: white;
-}
-
+/* Switch */
 .switch {
   position: relative;
   display: inline-block;
@@ -103,13 +70,10 @@ td {
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #374151;
+  inset: 0;
+  background: var(--border);
   transition: 0.4s;
-  border-radius: 20px;
+  border-radius: var(--radius-pill);
 }
 .slider:before {
   position: absolute;
@@ -118,65 +82,58 @@ td {
   width: 14px;
   left: 3px;
   bottom: 3px;
-  background-color: white;
+  background: white;
   transition: 0.4s;
   border-radius: 50%;
 }
 input:checked + .slider {
-  background-color: #10b981;
+  background: var(--success);
 }
 input:checked + .slider:before {
   transform: translateX(14px);
 }
 
+/* Botones de acción en tabla */
 .btn-action {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #a1a1aa;
+  color: var(--txt2);
   padding: 5px 8px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   display: flex;
 }
 .btn-action:hover {
   background: rgba(255, 255, 255, 0.1);
-  color: white;
+  color: var(--txt);
 }
 
-.th-sortable:hover {
-  color: white;
-  background: rgba(255, 255, 255, 0.05);
-}
-
+/* Paginación */
 .pagination-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 16px;
-  margin-top: 10px;
+  padding-top: var(--gap);
+  margin-top: var(--gap-sm);
   border-top: 1px solid var(--border);
 }
-
 .pagination-info {
-  font-size: 0.8rem;
+  font-size: var(--fs-sm);
   color: var(--txt3);
 }
-
 .btn-pagination {
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border);
-  color: white;
+  color: var(--txt);
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  font-size: 0.75rem;
-  transition: 0.2s;
+  font-size: var(--fs-xs);
+  transition: var(--t);
 }
-
 .btn-pagination:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.1);
 }
-
 .btn-pagination:disabled {
   opacity: 0.3;
   cursor: not-allowed;
