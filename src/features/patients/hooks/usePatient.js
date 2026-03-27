@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createDoctorSchema } from "../schemas/doctor.schema";
-import { createDoctor } from "../services/doctor.service";
+import { createPatientSchema } from "../schemas/patient.schema";
+import { createPatient } from "../services/patient.services";
 import { useUIStore } from "../../../store/ui.store";
 
-export const useDoctor = (onSuccess) => {
+export const usePatient = (onSuccess) => {
   const showToast = useUIStore((state) => state.showToast);
 
   const {
@@ -13,17 +13,19 @@ export const useDoctor = (onSuccess) => {
     reset,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: zodResolver(createDoctorSchema),
+    resolver: zodResolver(createPatientSchema),
   });
 
   const onSubmit = async (data) => {
     try {
-      const res = await createDoctor(data);
-      showToast(res.message);
+      await createPatient(data);
+      showToast("Paciente creado correctamente", "success");
+
       if (onSuccess) onSuccess();
+
       reset();
     } catch (error) {
-        showToast(error.response.data.message,"error");
+      showToast(error.response.data.message, "error");
     }
   };
 
@@ -31,6 +33,6 @@ export const useDoctor = (onSuccess) => {
     register,
     handleSubmit: handleSubmit(onSubmit),
     errors,
-    isSubmitting
+    isSubmitting,
   };
 };

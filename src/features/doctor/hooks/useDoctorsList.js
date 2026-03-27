@@ -25,8 +25,8 @@ export const useMedicos = () => {
     setMedicos(prev => prev.map(m => m.id === id ? { ...m, is_active: !m.is_active } : m));
 
     try {
-      await toggleMedicoStatus(id);
-      showToast("Estado de Medico Cambiado");
+      const res = await toggleMedicoStatus(id);
+      showToast(res.message);
     } catch (error) {
       setMedicos(originalMedicos);
       showToast("No se pudo cambiar el estado del Medico", "error");

@@ -22,8 +22,9 @@ export const useDoctorDetail = () => {
 
     const handleUpdateDoctor = async (id, payload, onSuccess) => {
         try {
-            await updateDoctor(id, payload);
-            showToast("Médico actualizado correctamente", "success");
+            const res = await updateDoctor(id, payload);
+            console.log(res)
+            showToast( res.message, "success");
             if (onSuccess) onSuccess();
         } catch (err) {
             showToast("Error actualizando médico", "error");

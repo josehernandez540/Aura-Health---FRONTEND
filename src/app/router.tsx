@@ -11,6 +11,7 @@ import AuditPage from '../pages/AuditPage.jsx';
 import DoctorPage from '../pages/Doctors.jsx';
 import NotFound from '../pages/notFound.jsx';
 import MainLayout from '../components/layout/MainLayout/MainLayout.js';
+import Patients from '../pages/Patients.jsx';
 
 const Dashboard = () => <div>Dashboard</div>;
 
@@ -73,6 +74,14 @@ export const router = createBrowserRouter([
         element: (
           <RoleGuard allowedRoles={['ADMIN']}>
             <DoctorPage />
+          </RoleGuard>
+        ),
+      },
+      {
+        path: '/patients',
+        element: (
+          <RoleGuard allowedRoles={['ADMIN']}>
+            <Patients />
           </RoleGuard>
         ),
       },

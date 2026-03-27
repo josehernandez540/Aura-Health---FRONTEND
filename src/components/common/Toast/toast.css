@@ -133,7 +133,7 @@
   height: 100%;
   width: 100%;
   background: currentColor;
-  animation: progress-drain 3s linear forwards;
+  animation: progress-drain 6s linear forwards;
 }
 
 .toast-success {

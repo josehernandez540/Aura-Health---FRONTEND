@@ -22,5 +22,5 @@ export const getDoctorById = async (id) => {
 
 export const updateDoctor = async (id, payload) => {
   const { data } = await api.put(`/v1/doctors/${id}`, payload);
-  return data?.data;
+  return data;
 };
