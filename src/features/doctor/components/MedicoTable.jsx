@@ -1,8 +1,8 @@
 import React from 'react';
 import DataTable from "../../../components/common/Datatable/Datatable";
-import Button from "../../../components/ui/Button/Button"; // Asumiendo que esta es la ruta
+import Button from "../../../components/ui/Button/Button";
 
-const MedicoTable = ({ medicos, loading, onToggleStatus }) => {
+const MedicoTable = ({ medicos, loading, onToggleStatus, onView, onEdit  }) => {
 
   const avatarColors = ["#6366f1", "#10b981", "#f59e0b", "#3b82f6", "#ec4899"];
 
@@ -48,10 +48,10 @@ const MedicoTable = ({ medicos, loading, onToggleStatus }) => {
       width: "120px",
       render: (medico) => (
         <div className="flex items-center justify-end gap-2">
-          <Button variant="ghost" size="sm" onClick={() => console.log('Info', medico.id)}>
+          <Button variant="ghost" size="sm" onClick={() => onView(medico.id)}>
              <img src="icons/info.svg" width={16} alt="info" className="icon-img-color" />
           </Button>
-          <Button variant="ghost" size="sm" onClick={() => console.log('Edit', medico.id)}>
+          <Button variant="ghost" size="sm" onClick={() => onEdit(medico.id)}>
              <img src="icons/edit.svg" width={16} alt="edit" className="icon-img-color" />
           </Button>
         </div>

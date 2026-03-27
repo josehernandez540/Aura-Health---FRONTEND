@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import Button from "../../../components/ui/Button/Button";
 import "./medicoCards.css";
 
-const MedicoCardsGrid = ({ medicos, filters, loading, onToggleStatus }) => {
+const MedicoCardsGrid = ({ medicos, filters, loading, onToggleStatus, onView, onEdit}) => {
   const getInitials = (name) => {
     return (
       name
@@ -63,7 +63,7 @@ const MedicoCardsGrid = ({ medicos, filters, loading, onToggleStatus }) => {
               </span>
             </div>
             <div className="ml-auto">
-              <Button variant="ghost" size="sm">
+              <Button variant="ghost" size="sm" onClick={() => onView(medico.id)}>
                 Ver
               </Button>
             </div>
@@ -98,7 +98,7 @@ const MedicoCardsGrid = ({ medicos, filters, loading, onToggleStatus }) => {
             >
               {medico.is_active ? "Inactivar" : "Activar"}
             </Button>
-            <Button variant="ghost" size="sm" style={{ flex: 1 }}>
+            <Button variant="ghost" size="sm" style={{ flex: 1 }} onClick={() => onEdit(medico.id)}>
               <img src="icons/edit.svg" className="icon-img-color" height={14}/> Editar
             </Button>
           </div>

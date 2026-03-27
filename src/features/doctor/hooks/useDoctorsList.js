@@ -35,5 +35,5 @@ export const useMedicos = () => {
 
   useEffect(() => { fetchMedicos(); }, []);
 
-  return { medicos, loading, handleToggleStatus };
+  return { medicos, loading, handleToggleStatus, fetchMedicos };
 };
