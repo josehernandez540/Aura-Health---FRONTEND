@@ -20,111 +20,137 @@ const LoginForm = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center"
-      style={{ background: 'linear-gradient(135deg, #1a1a6e 0%, #2d2d9b 50%, #1a1a6e 100%)' }}
-    >
-      {/* Card glassmorphism */}
-      <div
-        className="w-full max-w-md rounded-2xl px-10 py-10"
-        style={{
-          background: 'rgba(255, 255, 255, 0.08)',
-          backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
-        }}
-      >
+    <div style={{
+      minHeight: '100vh',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: 'linear-gradient(135deg, #1a1a6e 0%, #2d2d9b 50%, #1a1a6e 100%)',
+      fontFamily: 'sans-serif',
+    }}>
+      {/* Card */}
+      <div style={{
+        width: '100%',
+        maxWidth: '440px',
+        borderRadius: '16px',
+        padding: '48px 40px',
+        background: 'rgba(255, 255, 255, 0.08)',
+        backdropFilter: 'blur(12px)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+      }}>
         {/* Título */}
-        <h1 className="text-center text-4xl font-bold text-white mb-8 tracking-wide">
+        <h1 style={{
+          textAlign: 'center',
+          fontSize: '2.2rem',
+          fontWeight: 'bold',
+          color: '#ffffff',
+          marginBottom: '36px',
+          letterSpacing: '0.02em',
+        }}>
           Iniciar sesion
         </h1>
 
         {/* Error banner */}
         {errorMessage && (
-          <div
-            role="alert"
-            className="mb-5 flex items-start gap-3 rounded-lg px-4 py-3 text-sm text-red-200"
-            style={{ background: 'rgba(220, 38, 38, 0.25)', border: '1px solid rgba(220, 38, 38, 0.4)' }}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="mt-0.5 h-4 w-4 shrink-0"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <span>{errorMessage}</span>
+          <div role="alert" style={{
+            marginBottom: '20px',
+            padding: '12px 16px',
+            borderRadius: '8px',
+            background: 'rgba(220, 38, 38, 0.25)',
+            border: '1px solid rgba(220, 38, 38, 0.4)',
+            color: '#fca5a5',
+            fontSize: '0.875rem',
+          }}>
+            {errorMessage}
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate>
           {/* Email */}
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-2">
+          <div style={{ marginBottom: '20px' }}>
+            <label style={{
+              display: 'block',
+              color: '#e2e8f0',
+              fontSize: '0.9rem',
+              marginBottom: '8px',
+            }}>
               Correo electronico
             </label>
             <input
               type="email"
               autoComplete="email"
               {...register('email')}
-              className="w-full rounded-full px-5 py-3 text-sm text-gray-700 outline-none transition"
               style={{
+                width: '100%',
+                borderRadius: '999px',
+                padding: '10px 20px',
+                fontSize: '0.9rem',
+                color: '#1a1a6e',
                 background: 'rgba(220, 220, 235, 0.85)',
                 border: errors.email ? '2px solid #f87171' : '2px solid transparent',
+                outline: 'none',
+                boxSizing: 'border-box',
               }}
             />
             {errors.email && (
-              <p className="mt-1.5 text-xs text-red-300 pl-2">{errors.email.message}</p>
+              <p style={{ color: '#fca5a5', fontSize: '0.75rem', marginTop: '6px', paddingLeft: '8px' }}>
+                {errors.email.message}
+              </p>
             )}
           </div>
 
           {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-2">
+          <div style={{ marginBottom: '32px' }}>
+            <label style={{
+              display: 'block',
+              color: '#e2e8f0',
+              fontSize: '0.9rem',
+              marginBottom: '8px',
+            }}>
               Contraseña
             </label>
             <input
               type="password"
               autoComplete="current-password"
               {...register('password')}
-              className="w-full rounded-full px-5 py-3 text-sm text-gray-700 outline-none transition"
               style={{
+                width: '100%',
+                borderRadius: '999px',
+                padding: '10px 20px',
+                fontSize: '0.9rem',
+                color: '#1a1a6e',
                 background: 'rgba(220, 220, 235, 0.85)',
                 border: errors.password ? '2px solid #f87171' : '2px solid transparent',
+                outline: 'none',
+                boxSizing: 'border-box',
               }}
             />
             {errors.password && (
-              <p className="mt-1.5 text-xs text-red-300 pl-2">{errors.password.message}</p>
+              <p style={{ color: '#fca5a5', fontSize: '0.75rem', marginTop: '6px', paddingLeft: '8px' }}>
+                {errors.password.message}
+              </p>
             )}
           </div>
 
           {/* Submit */}
-          <div className="flex justify-center pt-2">
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <button
               type="submit"
               disabled={isLoading}
-              className="rounded-full px-12 py-2.5 text-sm font-semibold transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
               style={{
+                borderRadius: '999px',
+                padding: '10px 48px',
+                fontSize: '0.9rem',
+                fontWeight: '600',
                 background: 'rgba(220, 220, 235, 0.85)',
                 color: '#1a1a6e',
+                border: 'none',
+                cursor: isLoading ? 'not-allowed' : 'pointer',
+                opacity: isLoading ? 0.6 : 1,
               }}
             >
-              {isLoading ? (
-                <span className="flex items-center gap-2">
-                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                  </svg>
-                  Ingresando...
-                </span>
-              ) : (
-                'Ingresar'
-              )}
+              {isLoading ? 'Ingresando...' : 'Ingresar'}
             </button>
           </div>
         </form>
