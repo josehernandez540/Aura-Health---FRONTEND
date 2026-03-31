@@ -1,7 +1,11 @@
 export { default as LoginForm } from './LoginForm';
 export { default as LoginPage } from './LoginPage';
+export { default as UnauthorizedPage } from './UnauthorizedPage';
+export { default as RoleGuard } from './RoleGuard';
 export { useAuth } from './useAuth';
 export { useAuthStore } from './authStore';
 export { authService } from './auth.service';
 export { loginSchema } from './loginSchema';
+export { useHasRole } from './hasRole';
 export type { LoginFormValues } from './loginSchema';
+export type { UserRole } from './hasRole';
