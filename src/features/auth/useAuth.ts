@@ -30,7 +30,7 @@ export const useAuth = (): UseAuthReturn => {
       }
 
       const { token, userId, role, mustChangePassword } = response.data;
-      setAuth(token, userId, role);
+      setAuth(token, userId, role, mustChangePassword);
 
       if (mustChangePassword) {
         navigate('/change-password');

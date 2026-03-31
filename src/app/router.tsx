@@ -1,13 +1,11 @@
-import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 import LoginPage from '../features/auth/LoginPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import MainLayout from '../components/layout/MainLayout';
 
 // Placeholder pages — reemplazar con páginas reales cuando estén listas
-const DashboardPage = () => <div className="p-8 text-xl font-semibold">Dashboard</div>;
-const ChangePasswordPage = () => (
-  <div className="p-8 text-xl font-semibold">Cambio de contraseña</div>
-);
+const DashboardPage = () => <div style={{ padding: '2rem', fontSize: '1.25rem', fontWeight: 600 }}>Dashboard</div>;
+const ChangePasswordPage = () => <div style={{ padding: '2rem', fontSize: '1.25rem', fontWeight: 600 }}>Cambio de contraseña</div>;
 
 const router = createBrowserRouter([
   {
@@ -15,13 +13,13 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-    path: '/change-password',
-    element: <ChangePasswordPage />,
-  },
-  {
     path: '/',
     element: <ProtectedRoute />,
     children: [
+      {
+        path: 'change-password',
+        element: <ChangePasswordPage />,
+      },
       {
         element: <MainLayout />,
         children: [
