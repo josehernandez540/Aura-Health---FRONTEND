@@ -3,8 +3,11 @@ import Sidebar from '../SideBar/Sidebar';
 import Navbar from '../NavBar/Navbar';
 import './MainLayout.css';
 
+interface Props {
+  children: React.ReactNode;
+}
 
-const MainLayout = ({ children }) => {
+const MainLayout: React.FC<Props> = ({ children }) => {
   return (
     <div className="app">
       <Sidebar />

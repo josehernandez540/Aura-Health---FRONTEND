@@ -1,40 +1,52 @@
 import { createBrowserRouter, Outlet } from 'react-router-dom';
-import RootRedirect from './RootRedirect.jsx';
-import PrivateRoute from './PrivateRoute.jsx';
-import PublicRoute from './PublicRoute.jsx';
-import ForceChangePasswordRoute from './ForceChangePasswordRoute.jsx';
-import LoginForm from '../features/auth/components/LoginForm.jsx';
-import ChangePasswordForm from '../features/auth/change-password/ChangePasswordForm.jsx';
+import type { RouteObject } from 'react-router-dom';
+import RootRedirect from './RootRedirect';
+import PrivateRoute from './PrivateRoute';
+import PublicRoute from './PublicRoute';
 import RoleGuard from './RoleGuard';
-import Unauthorized from '../pages/Unauthorized.jsx';
-import AuditPage from '../pages/AuditPage.jsx';
-import DoctorPage from '../pages/Doctors.jsx';
-import NotFound from '../pages/notFound.jsx';
-import MainLayout from '../components/layout/MainLayout/MainLayout.js';
-import Patients from '../pages/Patients.jsx';
+import ForceChangePasswordRoute from './ForceChangePasswordRoute';
+import { SIDEBAR_CONFIG } from '../components/layout/SideBar/sidebar.config';
 
-const Dashboard = () => <div>Dashboard</div>;
+// Auth Features
+import LoginForm from '../features/auth/components/LoginForm';
+import ChangePasswordForm from '../features/auth/change-password/ChangePasswordForm';
+
+import Unauthorized from '../pages/Unauthorized';
+import NotFound from '../pages/notFound';
+import MainLayout from '../components/layout/MainLayout/MainLayout';
+
+const Dashboard: React.FC = () => <div>Perfil Example</div>;
+
+const generateProtectedRoutes = (): RouteObject[] => {
+  const routes: RouteObject[] = [];
+
+  SIDEBAR_CONFIG.forEach(section => {
+    section.items.forEach(item => {
+      if (item.component) {
+        routes.push({
+          path: item.path,
+          element: (
+            <RoleGuard allowedRoles={section.roles}>
+              <item.component />
+            </RoleGuard>
+          )
+        });
+      }
+    });
+  });
+
+  return routes;
+};
 
 export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <RootRedirect />,
-  },
+  { path: '/', element: <RootRedirect /> },
   {
     path: '/login',
-    element: 
-    <PublicRoute>
-      <LoginForm />
-    </PublicRoute>,
+    element: <PublicRoute> <LoginForm /> </PublicRoute>
   },
   {
     path: '/change-password',
-    element:
-    <>
-      <ForceChangePasswordRoute>
-        <ChangePasswordForm />
-      </ForceChangePasswordRoute>
-    </>
+    element: <ForceChangePasswordRoute> <ChangePasswordForm/> </ForceChangePasswordRoute>
   },
   {
     element: (
@@ -45,54 +57,13 @@ export const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      {
-        path: '/dashboard',
-        element: (
-          <RoleGuard allowedRoles={['ADMIN','DOCTOR']}>
-            <Dashboard />
-          </RoleGuard>
-        ),
-      },
-      {
-        path: '/citas',
-        element: (
-          <RoleGuard allowedRoles={['DOCTOR', 'ADMIN']}>
-            <Dashboard />
-          </RoleGuard>
-        ),
-      },
-      {
-        path: '/audit',
-        element: (
-          <RoleGuard allowedRoles={['ADMIN']}>
-            <AuditPage />
-          </RoleGuard>
-        ),
-      },
-      {
-        path: '/doctors',
-        element: (
-          <RoleGuard allowedRoles={['ADMIN']}>
-            <DoctorPage />
-          </RoleGuard>
-        ),
-      },
-      {
-        path: '/patients',
-        element: (
-          <RoleGuard allowedRoles={['ADMIN']}>
-            <Patients />
-          </RoleGuard>
-        ),
+      ...generateProtectedRoutes(),
+      { 
+        path: '/profile', 
+        element: <RoleGuard allowedRoles={['ADMIN', 'DOCTOR']}><Dashboard /></RoleGuard> 
       },
     ],
   },
-  {
-    path: '/unauthorized',
-    element: <Unauthorized />,
-  },
-  {
-  path: '*',
-    element: <NotFound/>,
-  }
+  { path: '/unauthorized', element: <Unauthorized /> },
+  { path: '*', element: <NotFound /> }
 ]);

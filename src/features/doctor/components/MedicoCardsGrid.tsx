@@ -1,9 +1,27 @@
 import React, { useMemo } from "react";
 import Button from "../../../components/ui/Button/Button";
+import { type Doctor } from "../services/doctor.service";
+import { type MedicoFilters } from "./MedicoFilterBar";
 import "./medicoCards.css";
 
-const MedicoCardsGrid = ({ medicos, filters, loading, onToggleStatus, onView, onEdit}) => {
-  const getInitials = (name) => {
+interface MedicoCardsProps {
+  medicos: Doctor[];
+  filters: MedicoFilters;
+  loading: boolean;
+  onToggleStatus: (id: string) => void;
+  onView: (id: string) => void;
+  onEdit: (id: string) => void;
+}
+
+const MedicoCardsGrid: React.FC<MedicoCardsProps> = ({
+  medicos,
+  filters,
+  loading,
+  onToggleStatus,
+  onView,
+  onEdit,
+}) => {
+  const getInitials = (name: string) => {
     return (
       name
         ?.split(" ")
@@ -21,7 +39,7 @@ const MedicoCardsGrid = ({ medicos, filters, loading, onToggleStatus, onView, on
         const matchesSearch =
           m.name.toLowerCase().includes(search) ||
           (m.users?.email || "").toLowerCase().includes(search) ||
-          (m.license || "").toLowerCase().includes(search);
+          (m.license_number || "").toLowerCase().includes(search);
 
         const matchesSpec =
           filters.specialization === "" ||
@@ -38,10 +56,7 @@ const MedicoCardsGrid = ({ medicos, filters, loading, onToggleStatus, onView, on
 
   if (loading) return <div className="p-4 text-white">Cargando médicos...</div>;
   if (filteredMedicos.length === 0)
-    return (
-      <div className="p-4 text-muted">No se encontraron coincidencias.</div>
-    );
-
+    return <div className="p-4 text-muted">No hay coincidencias.</div>;
   return (
     <div className="grid-3">
       {filteredMedicos.map((medico) => (
@@ -63,7 +78,11 @@ const MedicoCardsGrid = ({ medicos, filters, loading, onToggleStatus, onView, on
               </span>
             </div>
             <div className="ml-auto">
-              <Button variant="ghost" size="sm" onClick={() => onView(medico.id)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onView(medico.id)}
+              >
                 Ver
               </Button>
             </div>
@@ -98,8 +117,18 @@ const MedicoCardsGrid = ({ medicos, filters, loading, onToggleStatus, onView, on
             >
               {medico.is_active ? "Inactivar" : "Activar"}
             </Button>
-            <Button variant="ghost" size="sm" style={{ flex: 1 }} onClick={() => onEdit(medico.id)}>
-              <img src="icons/edit.svg" className="icon-img-color" height={14}/> Editar
+            <Button
+              variant="ghost"
+              size="sm"
+              style={{ flex: 1 }}
+              onClick={() => onEdit(medico.id)}
+            >
+              <img
+                src="icons/edit.svg"
+                className="icon-img-color"
+                height={14}
+              />{" "}
+              Editar
             </Button>
           </div>
         </div>

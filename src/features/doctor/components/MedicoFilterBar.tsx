@@ -1,7 +1,19 @@
+import React from "react";
 import SearchInput from "../../../components/ui/Inputs/SearchInput";
 import SelectInput from "../../../components/ui/Inputs/SelectInput";
 
-const MedicoFilterBar = ({ filters, onChange }) => {
+export interface MedicoFilters {
+  search: string;
+  specialization: string;
+  status: string;
+}
+
+interface MedicoFilterBarProps {
+  filters: MedicoFilters;
+  onChange: (key: keyof MedicoFilters, value: string) => void;
+}
+
+const MedicoFilterBar: React.FC<MedicoFilterBarProps> = ({ filters, onChange }) => {
   const specs = [
     { value: "", label: "Todas las especialidades" },
     { value: "Cardiología", label: "Cardiología" },

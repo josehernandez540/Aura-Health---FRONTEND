@@ -1,17 +1,17 @@
 import React from "react";
-import { useAuthStore } from "../../../features/auth/store/auth.store.js";
+import { useAuthStore } from "../../../features/auth/store/auth.store";
 import { SIDEBAR_CONFIG } from "./sidebar.config";
 import { NavLink } from "react-router-dom";
-import "./sidebar.css";
+import './sidebar.css';
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const { role, logout, userId } = useAuthStore();
 
   return (
     <aside className="sidebar">
       <div className="brand">
         <div className="brand-icon">
-          <img src="/assets/logo.png" height="30" />
+          <img src="/assets/logo.png" height="30" alt="Aura Logo" />
         </div>
         <div className="brand-text">
           <h1>Aura Health</h1>
@@ -21,7 +21,7 @@ const Sidebar = () => {
 
       <nav className="nav">
         {SIDEBAR_CONFIG.map((section) => {
-          if (!section.roles.includes(role)) return null;
+          if (!role || !section.roles.includes(role)) return null;
 
           return (
             <div className="nav-section" key={section.label}>
@@ -52,15 +52,17 @@ const Sidebar = () => {
 
       <div className="sidebar-footer">
         <div className="sidebar-user-card">
-          <div className="avatar">{role?.slice(0, 2)}</div>
+          <div className="avatar">
+            {role ? role.slice(0, 2).toUpperCase() : '??'}
+          </div>
 
           <div className="user-info">
-            <div className="user-name">{userId}</div>
+            <div className="user-name">{userId || 'Usuario'}</div>
             <div className="user-role">Rol: {role}</div>
           </div>
 
-          <button onClick={logout}>
-            <img src='/icons/left.svg' alt="" className="icon-img" />
+          <button onClick={() => logout()} title="Cerrar Sesión">
+            <img src='/icons/left.svg' alt="Logout" className="icon-img" />
           </button>
         </div>
       </div>

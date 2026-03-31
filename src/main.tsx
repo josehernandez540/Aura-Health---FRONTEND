@@ -5,7 +5,7 @@ import { RouterProvider } from "react-router-dom";
 import "./index.css";
 import "./App.css";
 import { router } from "./app/router";
-import {App} from './App.jsx'
+import {App} from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
