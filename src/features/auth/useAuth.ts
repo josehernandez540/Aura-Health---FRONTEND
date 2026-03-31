@@ -29,8 +29,8 @@ export const useAuth = (): UseAuthReturn => {
         return;
       }
 
-      const { token, userId, role, mustChangePassword } = response.data;
-      setAuth(token, userId, role, mustChangePassword);
+      const { token, mustChangePassword, user } = response.data;
+      setAuth(token, user.id, user.role, mustChangePassword);
 
       if (mustChangePassword) {
         navigate('/change-password');

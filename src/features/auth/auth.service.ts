@@ -1,5 +1,4 @@
 import api from '../../services/api';
-import LoginForm from './LoginForm';
 
 export interface LoginCredentials {
   email: string;
@@ -11,16 +10,19 @@ export interface LoginResponse {
   message: string;
   data: {
     token: string;
-    userId: string;
-    role: string;
     mustChangePassword: boolean;
+    user: {
+      id: string;
+      email: string;
+      role: string;
+    };
   };
   timestamp: string;
 }
 
 export const authService = {
   login: async (credentials: LoginCredentials): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>('/v1/auth/login', credentials);
+    const response = await api.post<LoginResponse>('/auth/login', credentials);
     return response.data;
   },
 };
