@@ -3,17 +3,18 @@ import LoginPage from '../features/auth/LoginPage';
 import ProtectedRoute from '../components/ProtectedRoute';
 import MainLayout from '../components/layout/MainLayout';
 import UnauthorizedPage from '../features/auth/UnauthorizedPage';
-import { useAuthStore } from '../features/auth/authStore';
 import AuditPage from '../features/audit/AuditPage';
+import ChangePasswordForm from '../features/auth/ChangePasswordForm';
+import { useAuthStore } from '../features/auth/authStore';
 
+// Redirige al dashboard si ya hay sesión activa
 const PublicRoute = () => {
   const { isAuthenticated } = useAuthStore();
   return isAuthenticated ? <Navigate to="/dashboard" replace /> : <Outlet />;
 };
 
-
+// Placeholder pages — reemplazar con páginas reales cuando estén listas
 const DashboardPage = () => <div style={{ padding: '2rem', fontSize: '1.25rem', fontWeight: 600 }}>Dashboard</div>;
-const ChangePasswordPage = () => <div style={{ padding: '2rem', fontSize: '1.25rem', fontWeight: 600 }}>Cambio de contraseña</div>;
 
 const router = createBrowserRouter([
   {
@@ -31,7 +32,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: 'change-password',
-        element: <ChangePasswordPage />,
+        element: <ChangePasswordForm />,
       },
       {
         path: 'unauthorized',

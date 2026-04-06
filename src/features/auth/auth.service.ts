@@ -20,9 +20,28 @@ export interface LoginResponse {
   timestamp: string;
 }
 
+export interface ChangePasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordResponse {
+  success: boolean;
+  message: string;
+  data: {
+    token: string;
+  };
+  timestamp: string;
+}
+
 export const authService = {
   login: async (credentials: LoginCredentials): Promise<LoginResponse> => {
     const response = await api.post<LoginResponse>('/auth/login', credentials);
+    return response.data;
+  },
+
+  changePassword: async (payload: ChangePasswordPayload): Promise<ChangePasswordResponse> => {
+    const response = await api.patch<ChangePasswordResponse>('/auth/change-password', payload);
     return response.data;
   },
 };
