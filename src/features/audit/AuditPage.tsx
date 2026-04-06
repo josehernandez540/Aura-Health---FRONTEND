@@ -1,4 +1,4 @@
-import RoleGuard from '../../components/RoleGuard';
+import RoleGuard from '../../features/auth/RoleGuard';
 import AuditTable from './AuditTable';
 
 const AuditPage = () => {

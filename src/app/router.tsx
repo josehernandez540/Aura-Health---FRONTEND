@@ -4,7 +4,7 @@ import ProtectedRoute from '../components/ProtectedRoute';
 import MainLayout from '../components/layout/MainLayout';
 import UnauthorizedPage from '../features/auth/UnauthorizedPage';
 import { useAuthStore } from '../features/auth/authStore';
-
+import AuditPage from '../features/audit/AuditPage';
 
 const PublicRoute = () => {
   const { isAuthenticated } = useAuthStore();
