@@ -6,6 +6,7 @@ import UnauthorizedPage from '../features/auth/UnauthorizedPage';
 import AuditPage from '../features/audit/AuditPage';
 import ChangePasswordForm from '../features/auth/ChangePasswordForm';
 import UsersPage from '../features/users/UsersPage';
+import AppointmentsPage from '../features/appointments/AppointmentsPage';
 import { useAuthStore } from '../features/auth/authStore';
 
 const PublicRoute = () => {
@@ -35,6 +36,7 @@ const router = createBrowserRouter([
           { path: 'dashboard', element: <DashboardPage /> },
           { path: 'audit', element: <AuditPage /> },
           { path: 'users', element: <UsersPage /> },
+          { path: 'agenda', element: <AppointmentsPage /> },
         ],
       },
     ],
