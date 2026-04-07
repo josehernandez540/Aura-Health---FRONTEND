@@ -3,12 +3,8 @@ import SessionGuard from "../SessionGuard";
 
 const MainLayout = () => {
   return (
-    <div>
+    <div style={{ minHeight: '100vh', background: '#f8fafc' }}>
       <SessionGuard />
-      <header>
-        <h1>Aura Health</h1>
-      </header>
-
       <main>
         <Outlet />
       </main>
