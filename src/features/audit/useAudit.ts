@@ -6,6 +6,7 @@ export const useAudit = () => {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
+  const [totalPagesState, setTotalPagesState] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const limit = 10;
@@ -16,8 +17,9 @@ export const useAudit = () => {
     try {
       const response = await auditService.getLogs(currentPage, limit);
       if (response.success) {
-        setLogs(response.data.logs);
+        setLogs(response.data.items);
         setTotal(response.data.total);
+        setTotalPagesState(response.data.totalPages);
       }
     } catch {
       setErrorMessage('No se pudieron cargar los registros de auditoría.');
@@ -30,7 +32,7 @@ export const useAudit = () => {
     fetchLogs(page);
   }, [page, fetchLogs]);
 
-  const totalPages = Math.ceil(total / limit);
+  const totalPages = totalPagesState;
 
   return { logs, total, page, setPage, totalPages, isLoading, errorMessage };
 };

@@ -23,137 +23,175 @@ const LoginForm = () => {
     <div style={{
       minHeight: '100vh',
       display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'linear-gradient(135deg, #1a1a6e 0%, #2d2d9b 50%, #1a1a6e 100%)',
       fontFamily: 'sans-serif',
     }}>
-      {/* Card */}
+      {/* Panel izquierdo */}
       <div style={{
-        width: '100%',
-        maxWidth: '440px',
-        borderRadius: '16px',
-        padding: '48px 40px',
-        background: 'rgba(255, 255, 255, 0.08)',
-        backdropFilter: 'blur(12px)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        width: '40%',
+        background: 'linear-gradient(160deg, #0d2137 0%, #0d3351 60%, #0a4a5e 100%)',
+        padding: '40px 48px',
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+        overflow: 'hidden',
       }}>
+        {/* Círculos decorativos */}
+        <div style={{
+          position: 'absolute', top: '-60px', right: '-40px',
+          width: '220px', height: '220px', borderRadius: '50%',
+          background: 'rgba(20, 120, 140, 0.25)',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: '80px', right: '-80px',
+          width: '300px', height: '300px', borderRadius: '50%',
+          background: 'rgba(20, 120, 140, 0.15)',
+        }} />
+
+        {/* Logo */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '80px', zIndex: 1 }}>
+          <div style={{
+            width: '48px', height: '48px', borderRadius: '50%',
+            background: 'linear-gradient(135deg, #14b8a6, #0ea5e9)',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontSize: '1.4rem',
+          }}>💧</div>
+          <span style={{ color: '#ffffff', fontWeight: '600', fontSize: '1.1rem' }}>Aura Health</span>
+        </div>
+
         {/* Título */}
-        <h1 style={{
-          textAlign: 'center',
-          fontSize: '2.2rem',
-          fontWeight: 'bold',
-          color: '#ffffff',
-          marginBottom: '36px',
-          letterSpacing: '0.02em',
-        }}>
-          Iniciar sesion
-        </h1>
-
-        {/* Error banner */}
-        {errorMessage && (
-          <div role="alert" style={{
-            marginBottom: '20px',
-            padding: '12px 16px',
-            borderRadius: '8px',
-            background: 'rgba(220, 38, 38, 0.25)',
-            border: '1px solid rgba(220, 38, 38, 0.4)',
-            color: '#fca5a5',
-            fontSize: '0.875rem',
+        <div style={{ zIndex: 1, flex: 1 }}>
+          <h1 style={{
+            color: '#ffffff', fontSize: '2.4rem', fontWeight: '800',
+            lineHeight: '1.2', marginBottom: '20px',
           }}>
-            {errorMessage}
-          </div>
-        )}
+            Sistema de<br />Gestión Clínica
+          </h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.9rem', lineHeight: '1.6', marginBottom: '60px' }}>
+            Centraliza la información médica,<br />controla agendas y garantiza seguridad.
+          </p>
 
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-          {/* Email */}
-          <div style={{ marginBottom: '20px' }}>
-            <label style={{
-              display: 'block',
-              color: '#e2e8f0',
-              fontSize: '0.9rem',
-              marginBottom: '8px',
+          {/* Features */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {['Control de tratamientos', 'Historial clínico digital'].map((feature) => (
+              <div key={feature} style={{
+                display: 'flex', alignItems: 'center', gap: '12px',
+                background: 'rgba(255,255,255,0.07)',
+                borderRadius: '8px', padding: '12px 16px',
+              }}>
+                <div style={{
+                  width: '8px', height: '8px', borderRadius: '50%',
+                  background: '#14b8a6', flexShrink: 0,
+                }} />
+                <span style={{ color: '#e2e8f0', fontSize: '0.875rem' }}>{feature}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Panel derecho */}
+      <div style={{
+        flex: 1,
+        background: '#f1f5f9',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '40px',
+      }}>
+        {/* Card */}
+        <div style={{
+          background: '#ffffff',
+          borderRadius: '16px',
+          padding: '48px 40px',
+          width: '100%',
+          maxWidth: '420px',
+          boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+        }}>
+          <h2 style={{ fontSize: '1.8rem', fontWeight: '700', color: '#0f172a', marginBottom: '6px' }}>
+            Bienvenido
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '0.875rem', marginBottom: '32px' }}>
+            Inicia sesión en tu cuenta clínica
+          </p>
+
+          {/* Error */}
+          {errorMessage && (
+            <div role="alert" style={{
+              marginBottom: '20px', padding: '12px 16px', borderRadius: '8px',
+              background: '#fef2f2', border: '1px solid #fca5a5',
+              color: '#dc2626', fontSize: '0.875rem',
             }}>
-              Correo electronico
-            </label>
-            <input
-              type="email"
-              autoComplete="email"
-              {...register('email')}
-              style={{
-                width: '100%',
-                borderRadius: '999px',
-                padding: '10px 20px',
-                fontSize: '0.9rem',
-                color: '#1a1a6e',
-                background: 'rgba(220, 220, 235, 0.85)',
-                border: errors.email ? '2px solid #f87171' : '2px solid transparent',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
-            />
-            {errors.email && (
-              <p style={{ color: '#fca5a5', fontSize: '0.75rem', marginTop: '6px', paddingLeft: '8px' }}>
-                {errors.email.message}
-              </p>
-            )}
-          </div>
+              {errorMessage}
+            </div>
+          )}
 
-          {/* Password */}
-          <div style={{ marginBottom: '32px' }}>
-            <label style={{
-              display: 'block',
-              color: '#e2e8f0',
-              fontSize: '0.9rem',
-              marginBottom: '8px',
-            }}>
-              Contraseña
-            </label>
-            <input
-              type="password"
-              autoComplete="current-password"
-              {...register('password')}
-              style={{
-                width: '100%',
-                borderRadius: '999px',
-                padding: '10px 20px',
-                fontSize: '0.9rem',
-                color: '#1a1a6e',
-                background: 'rgba(220, 220, 235, 0.85)',
-                border: errors.password ? '2px solid #f87171' : '2px solid transparent',
-                outline: 'none',
-                boxSizing: 'border-box',
-              }}
-            />
-            {errors.password && (
-              <p style={{ color: '#fca5a5', fontSize: '0.75rem', marginTop: '6px', paddingLeft: '8px' }}>
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
+            {/* Email */}
+            <div style={{ marginBottom: '20px' }}>
+              <label style={{ display: 'block', color: '#374151', fontSize: '0.875rem', fontWeight: '500', marginBottom: '8px' }}>
+                Correo electrónico
+              </label>
+              <input
+                type="email"
+                autoComplete="email"
+                placeholder="medico@aurahealth.co"
+                {...register('email')}
+                style={{
+                  width: '100%', borderRadius: '8px', padding: '12px 16px',
+                  fontSize: '0.9rem', color: '#0f172a',
+                  background: '#f8fafc',
+                  border: errors.email ? '1.5px solid #f87171' : '1.5px solid #e2e8f0',
+                  outline: 'none', boxSizing: 'border-box',
+                }}
+              />
+              {errors.email && (
+                <p style={{ color: '#dc2626', fontSize: '0.75rem', marginTop: '4px' }}>
+                  {errors.email.message}
+                </p>
+              )}
+            </div>
 
-          {/* Submit */}
-          <div style={{ display: 'flex', justifyContent: 'center' }}>
+            {/* Password */}
+            <div style={{ marginBottom: '28px' }}>
+              <label style={{ display: 'block', color: '#374151', fontSize: '0.875rem', fontWeight: '500', marginBottom: '8px' }}>
+                Contraseña
+              </label>
+              <input
+                type="password"
+                autoComplete="current-password"
+                placeholder="••••••••••••"
+                {...register('password')}
+                style={{
+                  width: '100%', borderRadius: '8px', padding: '12px 16px',
+                  fontSize: '0.9rem', color: '#0f172a',
+                  background: '#f8fafc',
+                  border: errors.password ? '1.5px solid #f87171' : '1.5px solid #e2e8f0',
+                  outline: 'none', boxSizing: 'border-box',
+                }}
+              />
+              {errors.password && (
+                <p style={{ color: '#dc2626', fontSize: '0.75rem', marginTop: '4px' }}>
+                  {errors.password.message}
+                </p>
+              )}
+            </div>
+
+            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
               style={{
-                borderRadius: '999px',
-                padding: '10px 48px',
-                fontSize: '0.9rem',
-                fontWeight: '600',
-                background: 'rgba(220, 220, 235, 0.85)',
-                color: '#1a1a6e',
-                border: 'none',
+                width: '100%', borderRadius: '8px', padding: '14px',
+                fontSize: '0.95rem', fontWeight: '600',
+                background: isLoading ? '#5eead4' : '#14b8a6',
+                color: '#ffffff', border: 'none',
                 cursor: isLoading ? 'not-allowed' : 'pointer',
-                opacity: isLoading ? 0.6 : 1,
               }}
             >
-              {isLoading ? 'Ingresando...' : 'Ingresar'}
+              {isLoading ? 'Iniciando sesión...' : 'Iniciar sesión'}
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );
