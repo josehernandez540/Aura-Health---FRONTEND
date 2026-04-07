@@ -8,6 +8,7 @@ import ChangePasswordForm from '../features/auth/ChangePasswordForm';
 import UsersPage from '../features/users/UsersPage';
 import AppointmentsPage from '../features/appointments/AppointmentsPage';
 import DoctorAgendaPage from '../features/appointments/DoctorAgendaPage';
+import PatientsPage from '../features/patients/PatientsPage';
 import { useAuthStore } from '../features/auth/authStore';
 
 const PublicRoute = () => {
@@ -15,11 +16,10 @@ const PublicRoute = () => {
   return isAuthenticated ? <Navigate to="/dashboard" replace /> : <Outlet />;
 };
 
-// Dashboard redirige según rol
 const DashboardRedirect = () => {
   const { role } = useAuthStore();
   if (role === 'ADMIN') return <Navigate to="/users" replace />;
-  return <Navigate to="/agenda" replace />;
+  return <Navigate to="/mi-agenda" replace />;
 };
 
 const router = createBrowserRouter([
@@ -44,6 +44,7 @@ const router = createBrowserRouter([
           { path: 'users', element: <UsersPage /> },
           { path: 'agenda', element: <AppointmentsPage /> },
           { path: 'mi-agenda', element: <DoctorAgendaPage /> },
+          { path: 'pacientes', element: <PatientsPage /> },
         ],
       },
     ],
