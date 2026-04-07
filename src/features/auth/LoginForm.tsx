@@ -48,15 +48,11 @@ const LoginForm = () => {
         }} />
 
         {/* Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '80px', zIndex: 1 }}>
-          <div style={{
-            width: '48px', height: '48px', borderRadius: '50%',
-            background: 'linear-gradient(135deg, #14b8a6, #0ea5e9)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontSize: '1.4rem',
-          }}>💧</div>
-          <span style={{ color: '#ffffff', fontWeight: '600', fontSize: '1.1rem' }}>Aura Health</span>
-        </div>
+        <img 
+  src="/logo.png" 
+  alt="Aura Health Logo"
+  style={{ width: '48px', height: '48px', borderRadius: '50%', objectFit: 'contain' }}
+/>
 
         {/* Título */}
         <div style={{ zIndex: 1, flex: 1 }}>
