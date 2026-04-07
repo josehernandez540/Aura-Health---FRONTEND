@@ -1,28 +1,29 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/authStore';
 import { useAuth } from '../../features/auth/useAuth';
-
+ 
 const menuItems = [
   { label: 'Usuarios', path: '/users', icon: '👥', roles: ['ADMIN'] },
-  { label: 'Agenda / Citas', path: '/agenda', icon: '📅', roles: ['ADMIN', 'MEDICO'] },
+  { label: 'Agenda / Citas', path: '/agenda', icon: '📅', roles: ['ADMIN'] },
+  { label: 'Mi Agenda', path: '/mi-agenda', icon: '📅', roles: ['MEDICO'] },
   { label: 'Historial Clínico', path: '/historial', icon: '🗂️', roles: ['ADMIN', 'MEDICO'] },
   { label: 'Tratamientos', path: '/tratamientos', icon: '💊', roles: ['ADMIN', 'MEDICO'] },
   { label: 'Notificaciones', path: '/notificaciones', icon: '🔔', roles: ['ADMIN', 'MEDICO'] },
   { label: 'Reportes', path: '/reportes', icon: '📊', roles: ['ADMIN'] },
   { label: 'Auditoría', path: '/audit', icon: '🔍', roles: ['ADMIN'] },
 ];
-
+ 
 const Sidebar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { role, userId } = useAuthStore();
   const { logout } = useAuth();
-
+ 
   const visibleItems = menuItems.filter(item => item.roles.includes(role || ''));
   const initial = role === 'ADMIN' ? 'A' : 'M';
   const displayName = role === 'ADMIN' ? 'Administrador' : 'Médico';
   const displayRole = role === 'ADMIN' ? 'Admin' : 'Médico';
-
+ 
   return (
     <div style={{
       width: '220px',
@@ -51,7 +52,7 @@ const Sidebar = () => {
         />
         <span style={{ color: '#ffffff', fontWeight: '700', fontSize: '1rem' }}>Aura Health</span>
       </div>
-
+ 
       {/* Usuario logueado */}
       <div style={{
         display: 'flex', alignItems: 'center', gap: '10px',
@@ -71,7 +72,7 @@ const Sidebar = () => {
           <div style={{ color: '#94a3b8', fontSize: '0.75rem' }}>{displayRole}</div>
         </div>
       </div>
-
+ 
       {/* Menú */}
       <nav style={{ flex: 1, padding: '12px 0' }}>
         {visibleItems.map((item) => {
@@ -97,7 +98,7 @@ const Sidebar = () => {
           );
         })}
       </nav>
-
+ 
       {/* Cerrar sesión */}
       <div style={{ padding: '16px 20px', borderTop: '1px solid rgba(255,255,255,0.08)' }}>
         <button
@@ -117,5 +118,5 @@ const Sidebar = () => {
     </div>
   );
 };
-
+ 
 export default Sidebar;

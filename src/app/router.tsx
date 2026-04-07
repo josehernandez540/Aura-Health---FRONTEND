@@ -7,6 +7,7 @@ import AuditPage from '../features/audit/AuditPage';
 import ChangePasswordForm from '../features/auth/ChangePasswordForm';
 import UsersPage from '../features/users/UsersPage';
 import AppointmentsPage from '../features/appointments/AppointmentsPage';
+import DoctorAgendaPage from '../features/appointments/DoctorAgendaPage';
 import { useAuthStore } from '../features/auth/authStore';
 
 const PublicRoute = () => {
@@ -14,7 +15,12 @@ const PublicRoute = () => {
   return isAuthenticated ? <Navigate to="/dashboard" replace /> : <Outlet />;
 };
 
-const DashboardPage = () => <div style={{ padding: '2rem', fontSize: '1.25rem', fontWeight: 600 }}>Dashboard</div>;
+// Dashboard redirige según rol
+const DashboardRedirect = () => {
+  const { role } = useAuthStore();
+  if (role === 'ADMIN') return <Navigate to="/users" replace />;
+  return <Navigate to="/agenda" replace />;
+};
 
 const router = createBrowserRouter([
   {
@@ -33,10 +39,11 @@ const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
           { index: true, element: <Navigate to="/dashboard" replace /> },
-          { path: 'dashboard', element: <DashboardPage /> },
+          { path: 'dashboard', element: <DashboardRedirect /> },
           { path: 'audit', element: <AuditPage /> },
           { path: 'users', element: <UsersPage /> },
           { path: 'agenda', element: <AppointmentsPage /> },
+          { path: 'mi-agenda', element: <DoctorAgendaPage /> },
         ],
       },
     ],
