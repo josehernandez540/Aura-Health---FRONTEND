@@ -34,7 +34,6 @@
   flex-shrink: 0;
 }
 .brand-text h1 {
-  font-family: var(--ff-head);
   font-size: 1.3rem;
   line-height: 1;
 }

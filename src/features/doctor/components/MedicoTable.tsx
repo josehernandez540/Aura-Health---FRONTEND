@@ -2,6 +2,7 @@ import React from 'react';
 import DataTable from "../../../components/common/Datatable/Datatable";
 import Button from "../../../components/ui/Button/Button";
 import { type Doctor } from '../services/doctor.service';
+import { getInitials, avatarColors } from '../../../utils/tableUtils';
 
 interface MedicoTableProps {
   medicos: Doctor[];
@@ -18,12 +19,6 @@ const MedicoTable: React.FC<MedicoTableProps> = ({
   onView, 
   onEdit  
 }) => {
-
-  const avatarColors = ["#6366f1", "#10b981", "#f59e0b", "#3b82f6", "#ec4899"];
-
-  const getInitials = (name: string) => {
-    return name?.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2) || "??";
-  };
 
   const columns = [
     {
