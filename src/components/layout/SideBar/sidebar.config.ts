@@ -3,6 +3,7 @@ import DoctorPage from "../../../pages/Doctors.tsx";
 import Patients from "../../../pages/Patients.tsx";
 import AuditPage from "../../../pages/AuditPage.tsx";
 import Dashboard from "../../../pages/Dashboard.tsx";
+import AdminUsersPage from "../../../pages/AdminUsers.tsx";
 
 interface SidebarItem {
   label: string;
@@ -44,6 +45,7 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         label: 'Usuarios',
         path: '/users',
         icon: 'user.svg',
+        component: AdminUsersPage
       },
     ],
   },
