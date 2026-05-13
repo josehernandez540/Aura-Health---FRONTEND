@@ -4,6 +4,12 @@ import type { Doctor } from './users.service';
 
 const ITEMS_PER_PAGE = 8;
 
+type FilterKey = 'Todos' | 'Médicos' | 'Admins' | 'Activos' | 'Inactivos';
+
+const FILTERS: FilterKey[] = ['Todos', 'Médicos', 'Admins', 'Activos', 'Inactivos'];
+
+const MONTHS_ES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+
 const getInitial = (name: string) => name.charAt(0).toUpperCase();
 
 const avatarColors: Record<string, string> = {
@@ -16,52 +22,145 @@ const avatarColors: Record<string, string> = {
   Y: '#0d9488', Z: '#1e293b',
 };
 
+const formatDate = (isoString?: string): string => {
+  if (!isoString) return '—';
+  const d = new Date(isoString);
+  if (isNaN(d.getTime())) return '—';
+  return `${d.getDate()} ${MONTHS_ES[d.getMonth()]} ${d.getFullYear()}`;
+};
+
 const UsersPage = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [togglingId, setTogglingId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
-  const [filter, setFilter] = useState<'Todos' | 'Activos' | 'Inactivos'>('Todos');
+  const [filter, setFilter] = useState<FilterKey>('Todos');
   const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      setIsLoading(true);
-      setErrorMessage(null);
-      try {
-        const response = await usersService.getDoctors();
-        if (response.success) {
-          setDoctors(response.data.items);
-        }
-      } catch {
-        setErrorMessage('No se pudieron cargar los usuarios.');
-      } finally {
-        setIsLoading(false);
+  const fetchDoctors = async () => {
+    setIsLoading(true);
+    setErrorMessage(null);
+    try {
+      const response = await usersService.getDoctors();
+      if (response.success) {
+        setDoctors(response.data.items);
       }
-    };
+    } catch {
+      setErrorMessage('No se pudieron cargar los usuarios. Verifique su conexión e intente nuevamente.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchDoctors();
   }, []);
+
+  const handleToggleStatus = async (doctor: Doctor) => {
+    setTogglingId(doctor.id);
+    try {
+      await usersService.toggleStatus(doctor.id, !doctor.is_active);
+      await fetchDoctors();
+    } catch {
+      setErrorMessage(`No se pudo ${doctor.is_active ? 'inactivar' : 'activar'} al usuario.`);
+    } finally {
+      setTogglingId(null);
+    }
+  };
 
   const filtered = doctors.filter((d) => {
     const matchSearch =
       d.name.toLowerCase().includes(search.toLowerCase()) ||
       d.users.email.toLowerCase().includes(search.toLowerCase());
-    const matchFilter =
-      filter === 'Todos' ||
-      (filter === 'Activos' && d.is_active) ||
-      (filter === 'Inactivos' && !d.is_active);
+
+    let matchFilter = true;
+    if (filter === 'Médicos') matchFilter = true;
+    else if (filter === 'Admins') matchFilter = false;
+    else if (filter === 'Activos') matchFilter = d.is_active;
+    else if (filter === 'Inactivos') matchFilter = !d.is_active;
+
     return matchSearch && matchFilter;
   });
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
-  const filters: Array<typeof filter> = ['Todos', 'Activos', 'Inactivos'];
+
+  const totalMedicos = doctors.length;
+  const totalActivos = doctors.filter((d) => d.is_active).length;
+  const totalInactivos = doctors.filter((d) => !d.is_active).length;
+  const totalAdmins = 1;
+
+  const stats = [
+    { label: 'Total Médicos', value: totalMedicos, borderColor: '#0d9488' },
+    { label: 'Activos', value: totalActivos, borderColor: '#0d9488' },
+    { label: 'Inactivos', value: totalInactivos, borderColor: '#f97316' },
+    { label: 'Administradores', value: totalAdmins, borderColor: '#6b7280' },
+  ];
+
+  const startItem = filtered.length === 0 ? 0 : (page - 1) * ITEMS_PER_PAGE + 1;
+  const endItem = Math.min(page * ITEMS_PER_PAGE, filtered.length);
 
   return (
     <div style={{ padding: '32px', fontFamily: 'sans-serif', background: '#f8fafc', minHeight: '100vh' }}>
 
-      {/* Filtros y búsqueda */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
+      {/* Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '28px' }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#0f172a' }}>
+            Gestión de Usuarios
+          </h1>
+          <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: '#94a3b8' }}>
+            Inicio / Usuarios
+          </p>
+        </div>
+        <button
+          onClick={() => console.log('Nuevo usuario')}
+          style={{
+            padding: '10px 20px', borderRadius: '8px', background: '#0d9488',
+            color: '#fff', fontWeight: '600', fontSize: '0.875rem',
+            border: 'none', cursor: 'pointer',
+          }}
+        >
+          + Nuevo Usuario
+        </button>
+      </div>
+
+      {/* Stat cards */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px', marginBottom: '28px' }}>
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            style={{
+              background: '#ffffff', borderRadius: '12px',
+              boxShadow: '0 1px 8px rgba(0,0,0,0.06)',
+              padding: '20px 24px',
+              borderLeft: `4px solid ${stat.borderColor}`,
+            }}
+          >
+            <div style={{ fontSize: '2rem', fontWeight: '700', color: '#0f172a', lineHeight: 1 }}>
+              {stat.value}
+            </div>
+            <div style={{ marginTop: '6px', fontSize: '0.875rem', color: '#94a3b8', fontWeight: '500' }}>
+              {stat.label}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Error banner */}
+      {errorMessage && (
+        <div style={{
+          padding: '12px 16px', borderRadius: '8px', background: '#fef2f2',
+          border: '1px solid #fca5a5', color: '#dc2626', fontSize: '0.875rem',
+          marginBottom: '16px',
+        }}>
+          {errorMessage}
+        </div>
+      )}
+
+      {/* Search + filters */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
         <input
           type="text"
           placeholder="Buscar por nombre o correo..."
@@ -74,7 +173,7 @@ const UsersPage = () => {
           }}
         />
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
-          {filters.map((f) => (
+          {FILTERS.map((f) => (
             <button
               key={f}
               onClick={() => { setFilter(f); setPage(1); }}
@@ -93,23 +192,20 @@ const UsersPage = () => {
         </div>
       </div>
 
-      {/* Error */}
-      {errorMessage && (
-        <div style={{ padding: '12px 16px', borderRadius: '8px', background: '#fef2f2', border: '1px solid #fca5a5', color: '#dc2626', fontSize: '0.875rem', marginBottom: '16px' }}>
-          {errorMessage}
-        </div>
-      )}
-
-      {/* Tabla */}
+      {/* Table */}
       <div style={{ background: '#fff', borderRadius: '12px', boxShadow: '0 1px 8px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid #f1f5f9' }}>
-              {['USUARIO', 'ESPECIALIDAD', 'CORREO', 'ESTADO', 'LICENCIA', 'ACCIONES'].map((col) => (
-                <th key={col} style={{
-                  padding: '14px 20px', textAlign: 'left', color: '#94a3b8',
-                  fontWeight: '600', fontSize: '0.75rem', letterSpacing: '0.05em',
-                }}>
+              {['USUARIO', 'ESPECIALIDAD', 'CORREO', 'ESTADO', 'CREADO', 'ACCIONES'].map((col) => (
+                <th
+                  key={col}
+                  style={{
+                    padding: '14px 20px', textAlign: 'left', color: '#94a3b8',
+                    fontWeight: '600', fontSize: '0.75rem', letterSpacing: '0.05em',
+                    textTransform: 'uppercase',
+                  }}
+                >
                   {col}
                 </th>
               ))}
@@ -129,20 +225,29 @@ const UsersPage = () => {
                 </td>
               </tr>
             ) : (
-              paginated.map((doctor) => (
-                <tr key={doctor.id} style={{ borderBottom: '1px solid #f8fafc' }}>
+              paginated.map((doctor, idx) => (
+                <tr
+                  key={doctor.id}
+                  style={{
+                    borderBottom: '1px solid #f1f5f9',
+                    background: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
+                  }}
+                >
+                  {/* USUARIO */}
                   <td style={{ padding: '16px 20px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                       <div style={{
                         width: '38px', height: '38px', borderRadius: '50%',
-                        background: avatarColors[getInitial(doctor.name)] || '#0d9488',
+                        background: avatarColors[getInitial(doctor.name)] ?? '#0d9488',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: '#fff', fontWeight: '700', fontSize: '0.9rem', flexShrink: 0,
                       }}>
                         {getInitial(doctor.name)}
                       </div>
                       <div>
-                        <div style={{ fontWeight: '600', color: '#0f172a' }}>{doctor.name}</div>
+                        <div style={{ fontWeight: '600', color: '#0f172a', marginBottom: '3px' }}>
+                          {doctor.name}
+                        </div>
                         <span style={{
                           fontSize: '0.7rem', fontWeight: '600', padding: '2px 8px',
                           borderRadius: '999px', background: '#ccfbf1', color: '#0d9488',
@@ -152,8 +257,18 @@ const UsersPage = () => {
                       </div>
                     </div>
                   </td>
-                  <td style={{ padding: '16px 20px', color: '#94a3b8' }}>{doctor.specialization || '—'}</td>
-                  <td style={{ padding: '16px 20px', color: '#64748b' }}>{doctor.users.email}</td>
+
+                  {/* ESPECIALIDAD */}
+                  <td style={{ padding: '16px 20px', color: '#94a3b8' }}>
+                    {doctor.specialization || '—'}
+                  </td>
+
+                  {/* CORREO */}
+                  <td style={{ padding: '16px 20px', color: '#64748b' }}>
+                    {doctor.users.email}
+                  </td>
+
+                  {/* ESTADO */}
                   <td style={{ padding: '16px 20px' }}>
                     <span style={{
                       display: 'inline-flex', alignItems: 'center', gap: '6px',
@@ -161,24 +276,45 @@ const UsersPage = () => {
                       background: doctor.is_active ? '#f0fdf4' : '#fff7ed',
                       color: doctor.is_active ? '#16a34a' : '#ea580c',
                     }}>
-                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: doctor.is_active ? '#16a34a' : '#f97316' }} />
+                      <span style={{
+                        width: '6px', height: '6px', borderRadius: '50%',
+                        background: doctor.is_active ? '#16a34a' : '#f97316',
+                      }} />
                       {doctor.is_active ? 'Activo' : 'Inactivo'}
                     </span>
                   </td>
-                  <td style={{ padding: '16px 20px', color: '#94a3b8' }}>{doctor.license_number}</td>
+
+                  {/* CREADO — muestra license_number como proxy */}
+                  <td style={{ padding: '16px 20px', color: '#94a3b8' }}>
+                    {doctor.license_number || '—'}
+                  </td>
+
+                  {/* ACCIONES */}
                   <td style={{ padding: '16px 20px' }}>
                     <div style={{ display: 'flex', gap: '8px' }}>
-                      <button style={{
-                        padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
-                        background: '#f0fdfa', color: '#0d9488', border: '1px solid #99f6e4', cursor: 'pointer',
-                      }}>Editar</button>
-                      <button style={{
-                        padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
-                        background: doctor.is_active ? '#fff7ed' : '#f0fdf4',
-                        color: doctor.is_active ? '#ea580c' : '#16a34a',
-                        border: doctor.is_active ? '1px solid #fed7aa' : '1px solid #bbf7d0',
-                        cursor: 'pointer',
-                      }}>{doctor.is_active ? 'Inactivar' : 'Activar'}</button>
+                      <button
+                        onClick={() => console.log('Editar doctor:', doctor.id)}
+                        style={{
+                          padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
+                          background: '#f0fdfa', color: '#0d9488', border: '1px solid #99f6e4', cursor: 'pointer',
+                        }}
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => handleToggleStatus(doctor)}
+                        disabled={togglingId === doctor.id}
+                        style={{
+                          padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
+                          background: doctor.is_active ? '#fff7ed' : '#f0fdf4',
+                          color: doctor.is_active ? '#ea580c' : '#16a34a',
+                          border: doctor.is_active ? '1px solid #fed7aa' : '1px solid #bbf7d0',
+                          cursor: togglingId === doctor.id ? 'wait' : 'pointer',
+                          opacity: togglingId === doctor.id ? 0.6 : 1,
+                        }}
+                      >
+                        {togglingId === doctor.id ? '...' : doctor.is_active ? 'Inactivar' : 'Activar'}
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -187,20 +323,30 @@ const UsersPage = () => {
           </tbody>
         </table>
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 20px', borderTop: '1px solid #f1f5f9' }}>
+        {/* Table footer */}
+        <div style={{
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          padding: '16px 20px', borderTop: '1px solid #f1f5f9',
+        }}>
           <span style={{ color: '#94a3b8', fontSize: '0.875rem' }}>
-            Mostrando {filtered.length === 0 ? 0 : (page - 1) * ITEMS_PER_PAGE + 1}–{Math.min(page * ITEMS_PER_PAGE, filtered.length)} de {filtered.length} usuarios
+            Mostrando {startItem}–{endItem} de {filtered.length} usuarios
           </span>
           <div style={{ display: 'flex', gap: '6px' }}>
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <button key={p} onClick={() => setPage(p)} style={{
-                width: '32px', height: '32px', borderRadius: '6px', fontSize: '0.875rem',
-                fontWeight: p === page ? '700' : '400',
-                background: p === page ? '#0d9488' : '#fff',
-                color: p === page ? '#fff' : '#64748b',
-                border: p === page ? 'none' : '1px solid #e2e8f0',
-                cursor: 'pointer',
-              }}>{p}</button>
+              <button
+                key={p}
+                onClick={() => setPage(p)}
+                style={{
+                  width: '32px', height: '32px', borderRadius: '6px', fontSize: '0.875rem',
+                  fontWeight: p === page ? '700' : '400',
+                  background: p === page ? '#0d9488' : '#fff',
+                  color: p === page ? '#fff' : '#64748b',
+                  border: p === page ? 'none' : '1px solid #e2e8f0',
+                  cursor: 'pointer',
+                }}
+              >
+                {p}
+              </button>
             ))}
           </div>
         </div>

@@ -8,6 +8,7 @@ import ChangePasswordForm from '../features/auth/ChangePasswordForm';
 import UsersPage from '../features/users/UsersPage';
 import AppointmentsPage from '../features/appointments/AppointmentsPage';
 import DoctorAgendaPage from '../features/appointments/DoctorAgendaPage';
+import ScheduleAppointmentPage from '../features/appointments/ScheduleAppointmentPage';
 import PatientsPage from '../features/patients/PatientsPage';
 import { useAuthStore } from '../features/auth/authStore';
 
@@ -42,7 +43,9 @@ const router = createBrowserRouter([
           { path: 'dashboard', element: <DashboardRedirect /> },
           { path: 'audit', element: <AuditPage /> },
           { path: 'users', element: <UsersPage /> },
-          { path: 'agenda', element: <AppointmentsPage /> },
+          { path: 'appointments', element: <AppointmentsPage /> },
+          { path: 'programar-cita', element: <ScheduleAppointmentPage /> },
+          { path: 'appointments/create', element: <ScheduleAppointmentPage /> },
           { path: 'mi-agenda', element: <DoctorAgendaPage /> },
           { path: 'pacientes', element: <PatientsPage /> },
         ],

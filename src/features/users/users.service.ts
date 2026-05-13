@@ -29,4 +29,8 @@ export const usersService = {
     const response = await api.get<DoctorsResponse>('/doctors');
     return response.data;
   },
+
+  toggleStatus: async (id: string, isActive: boolean): Promise<void> => {
+    await api.patch(`/doctors/${id}/status`, { isActive });
+  },
 };
