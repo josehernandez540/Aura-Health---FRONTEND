@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { usersService } from './users.service';
 import type { Doctor } from './users.service';
 
@@ -33,6 +34,7 @@ const UsersPage = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const navigate = useNavigate();
   const [togglingId, setTogglingId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterKey>('Todos');
@@ -115,7 +117,7 @@ const UsersPage = () => {
           </p>
         </div>
         <button
-          onClick={() => console.log('Nuevo usuario')}
+          onClick={() => navigate('/medicos/create')}
           style={{
             padding: '10px 20px', borderRadius: '8px', background: '#0d9488',
             color: '#fff', fontWeight: '600', fontSize: '0.875rem',

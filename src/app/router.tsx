@@ -10,6 +10,7 @@ import AppointmentsPage from '../features/appointments/AppointmentsPage';
 import DoctorAgendaPage from '../features/appointments/DoctorAgendaPage';
 import ScheduleAppointmentPage from '../features/appointments/ScheduleAppointmentPage';
 import PatientsPage from '../features/patients/PatientsPage';
+import CreateDoctorPage from '../features/users/CreateDoctorPage';
 import { useAuthStore } from '../features/auth/authStore';
 
 const PublicRoute = () => {
@@ -43,6 +44,9 @@ const router = createBrowserRouter([
           { path: 'dashboard', element: <DashboardRedirect /> },
           { path: 'audit', element: <AuditPage /> },
           { path: 'users', element: <UsersPage /> },
+          { path: 'users/create', element: <CreateDoctorPage /> },
+          { path: 'medicos', element: <UsersPage /> },
+          { path: 'medicos/create', element: <CreateDoctorPage /> },
           { path: 'appointments', element: <AppointmentsPage /> },
           { path: 'programar-cita', element: <ScheduleAppointmentPage /> },
           { path: 'appointments/create', element: <ScheduleAppointmentPage /> },

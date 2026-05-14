@@ -4,7 +4,7 @@ import { useAuthStore } from '../../features/auth/authStore';
 import { useAuth } from '../../features/auth/useAuth';
 
 const menuItems = [
-  { label: 'Usuarios',          path: '/users',          roles: ['ADMIN'] },
+  { label: 'Médicos',           path: '/medicos',        roles: ['ADMIN'] },
   { label: 'Citas',             path: '/appointments',   roles: ['ADMIN'] },
   { label: 'Programar Cita',    path: '/programar-cita', roles: ['ADMIN'] },
   { label: 'Pacientes',         path: '/pacientes',     roles: ['MEDICO'] },
