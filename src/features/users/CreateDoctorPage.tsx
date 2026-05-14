@@ -5,6 +5,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { doctorsService } from './doctors.service';
 import type { CreateDoctorPayload } from './doctors.service';
+import Toast from '../../components/ui/Toast';
+import { useToast } from '../../hooks/useToast';
 
 const createDoctorSchema = z.object({
   name: z.string().min(1, 'El nombre es requerido'),
@@ -53,8 +55,7 @@ const inputError: React.CSSProperties = {
 const CreateDoctorPage = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { toast, showToast, hideToast } = useToast();
 
   const {
     register,
@@ -67,8 +68,6 @@ const CreateDoctorPage = () => {
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
-    setSuccessMessage(null);
-    setErrorMessage(null);
 
     const payload: CreateDoctorPayload = {
       name: data.name,
@@ -80,18 +79,18 @@ const CreateDoctorPage = () => {
 
     try {
       await doctorsService.createDoctor(payload);
-      setSuccessMessage('Médico creado exitosamente. Ya puede iniciar sesión en el sistema.');
+      showToast('Médico creado exitosamente. Ya puede iniciar sesión en el sistema.', 'success');
       reset();
-      setTimeout(() => navigate('/users'), 2000);
+      setTimeout(() => navigate('/medicos'), 2000);
     } catch (err: unknown) {
       const axiosError = err as { response?: { status?: number; data?: { message?: string } } };
       const status = axiosError?.response?.status;
       const message = axiosError?.response?.data?.message ?? '';
 
       if (status === 409 || message.toLowerCase().includes('email') || message.toLowerCase().includes('duplicado')) {
-        setErrorMessage('El correo electrónico ya está registrado en el sistema.');
+        showToast('El correo electrónico ya está registrado en el sistema.', 'error');
       } else {
-        setErrorMessage(message || 'Error al crear el médico. Intente nuevamente.');
+        showToast(message || 'Error al crear el médico. Intente nuevamente.', 'error');
       }
     } finally {
       setIsSubmitting(false);
@@ -113,7 +112,7 @@ const CreateDoctorPage = () => {
         </div>
         <div style={{ display: 'flex', gap: '12px' }}>
           <button
-            onClick={() => navigate('/users')}
+            onClick={() => navigate('/medicos')}
             style={{
               padding: '10px 20px', borderRadius: '8px',
               background: '#fff', color: '#374151',
@@ -140,28 +139,6 @@ const CreateDoctorPage = () => {
           </button>
         </div>
       </div>
-
-      {/* Success banner */}
-      {successMessage && (
-        <div style={{
-          padding: '14px 18px', borderRadius: '8px', background: '#f0fdf4',
-          border: '1px solid #bbf7d0', color: '#16a34a', fontSize: '0.875rem',
-          marginBottom: '24px',
-        }}>
-          {successMessage}
-        </div>
-      )}
-
-      {/* Error banner */}
-      {errorMessage && (
-        <div style={{
-          padding: '14px 18px', borderRadius: '8px', background: '#fef2f2',
-          border: '1px solid #fca5a5', color: '#dc2626', fontSize: '0.875rem',
-          marginBottom: '24px',
-        }}>
-          {errorMessage}
-        </div>
-      )}
 
       {/* Card */}
       <div style={{
@@ -281,6 +258,14 @@ const CreateDoctorPage = () => {
           </div>
         </form>
       </div>
+
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
+        duration={3000}
+      />
     </div>
   );
 };

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { usersService } from './users.service';
 import type { Doctor } from './users.service';
+import ToggleStatusModal from './ToggleStatusModal';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -36,6 +37,8 @@ const UsersPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
   const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [togglingDoctor, setTogglingDoctor] = useState<{ id: string; name: string; isActive: boolean } | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterKey>('Todos');
   const [page, setPage] = useState(1);
@@ -304,7 +307,10 @@ const UsersPage = () => {
                         Editar
                       </button>
                       <button
-                        onClick={() => handleToggleStatus(doctor)}
+                        onClick={() => {
+                          setTogglingDoctor({ id: doctor.id, name: doctor.name, isActive: doctor.is_active });
+                          setToggleModal(true);
+                        }}
                         disabled={togglingId === doctor.id}
                         style={{
                           padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
@@ -353,6 +359,23 @@ const UsersPage = () => {
           </div>
         </div>
       </div>
+      {toggleModal && togglingDoctor && (
+        <ToggleStatusModal
+          isOpen={toggleModal}
+          doctorName={togglingDoctor.name}
+          isActive={togglingDoctor.isActive}
+          doctorId={togglingDoctor.id}
+          onClose={() => {
+            setToggleModal(false);
+            setTogglingDoctor(null);
+          }}
+          onSuccess={() => {
+            setToggleModal(false);
+            setTogglingDoctor(null);
+            fetchDoctors();
+          }}
+        />
+      )}
     </div>
   );
 };
