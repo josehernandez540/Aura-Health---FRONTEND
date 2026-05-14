@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../features/auth/authStore';
 import { useAuth } from '../../features/auth/useAuth';
@@ -20,9 +21,25 @@ const Sidebar = () => {
   const { role } = useAuthStore();
   const { logout } = useAuth();
 
+  const [doctorName, setDoctorName] = useState(
+    () => localStorage.getItem('aura_doctorName') || 'Médico'
+  );
+  const [doctorSpecialization, setDoctorSpecialization] = useState(
+    () => localStorage.getItem('aura_doctorSpecialization') || 'Médico'
+  );
+
+  useEffect(() => {
+    const handleDoctorLoaded = () => {
+      setDoctorName(localStorage.getItem('aura_doctorName') || 'Médico');
+      setDoctorSpecialization(localStorage.getItem('aura_doctorSpecialization') || 'Médico');
+    };
+    window.addEventListener('aura:doctorLoaded', handleDoctorLoaded);
+    return () => window.removeEventListener('aura:doctorLoaded', handleDoctorLoaded);
+  }, []);
+
   const visibleItems = menuItems.filter((item) => item.roles.includes(role ?? ''));
-  const displayName = role === 'ADMIN' ? 'Administrador' : 'Médico';
-  const displaySubtitle = role === 'ADMIN' ? 'Admmin' : 'Médico';
+  const displayName = role === 'ADMIN' ? 'Administrador' : doctorName;
+  const displaySubtitle = role === 'ADMIN' ? 'Admmin' : doctorSpecialization;
   const initial = displayName.charAt(0).toUpperCase();
 
   return (
