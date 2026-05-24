@@ -36,9 +36,25 @@ export interface Patient {
   updatedAt?: string;
 }
 
+export interface RawPatient {
+  id: string;
+  name: string;
+  document_number: string;
+  birth_date: string;
+  phone: string;
+  email: string;
+  is_active: boolean;
+  created_at: string;
+}
+
 export const patientService = {
   createPatient: async (payload: CreatePatientPayload): Promise<CreatePatientResponse> => {
     const response = await api.post<CreatePatientResponse>('/patients', payload);
+    return response.data;
+  },
+
+  getPatients: async (): Promise<{ success: boolean; data: { items: RawPatient[]; total: number } }> => {
+    const response = await api.get('/patients');
     return response.data;
   },
 
@@ -50,5 +66,9 @@ export const patientService = {
   updatePatient: async (id: string, payload: Partial<CreatePatientPayload>): Promise<CreatePatientResponse> => {
     const response = await api.put(`/patients/${id}`, payload);
     return response.data;
+  },
+
+  togglePatientStatus: async (id: string, isActive: boolean): Promise<void> => {
+    await api.patch(`/patients/${id}/status`, { isActive });
   },
 };
