@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { appointmentsService } from '../appointments/appointments.service';
 import type { Appointment } from '../appointments/appointments.service';
 
@@ -32,6 +33,7 @@ const avatarColors: Record<string, string> = {
 };
 
 const PatientsPage = () => {
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
@@ -82,11 +84,24 @@ const PatientsPage = () => {
     <div style={{ padding: '32px', fontFamily: 'sans-serif', background: '#f8fafc', minHeight: '100vh' }}>
 
       {/* Header */}
-      <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#0f172a', marginBottom: '4px' }}>
-          {selectedPatientData ? selectedPatientData.name : 'Pacientes'}
-        </h1>
-        <p style={{ color: '#94a3b8', fontSize: '0.875rem', textTransform: 'capitalize' }}>{today}</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+        <div>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: '700', color: '#0f172a', marginBottom: '4px' }}>
+            {selectedPatientData ? selectedPatientData.name : 'Pacientes'}
+          </h1>
+          <p style={{ color: '#94a3b8', fontSize: '0.875rem', textTransform: 'capitalize' }}>{today}</p>
+        </div>
+        <button
+          onClick={() => navigate('/pacientes/create')}
+          style={{
+            padding: '10px 20px', borderRadius: '8px',
+            background: '#0d9488', color: '#fff',
+            border: 'none', fontSize: '0.875rem',
+            fontWeight: '600', cursor: 'pointer', fontFamily: 'sans-serif',
+          }}
+        >
+          + Nuevo Paciente
+        </button>
       </div>
 
       {/* Lista de pacientes */}
@@ -205,9 +220,23 @@ const PatientsPage = () => {
                 <span style={{
                   padding: '4px 12px', borderRadius: '999px', fontSize: '0.8rem', fontWeight: '500',
                   background: status.bg, color: status.color, border: `1px solid ${status.border}`,
+                  marginRight: '16px',
                 }}>
                   {status.label}
                 </span>
+
+                {/* Acciones */}
+                <button
+                  onClick={() => navigate(`/pacientes/${apt.patientId}/edit`)}
+                  style={{
+                    padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem',
+                    fontWeight: '500', cursor: 'pointer', fontFamily: 'sans-serif',
+                    background: '#f0fdfa', color: '#0d9488',
+                    border: '1px solid #99f6e4',
+                  }}
+                >
+                  Editar
+                </button>
               </div>
             );
           })

@@ -7,12 +7,12 @@ const menuItems = [
   { label: 'Médicos',           path: '/medicos',        roles: ['ADMIN'] },
   { label: 'Citas',             path: '/appointments',   roles: ['ADMIN'] },
   { label: 'Programar Cita',    path: '/programar-cita', roles: ['ADMIN'] },
-  { label: 'Pacientes',         path: '/pacientes',     roles: ['MEDICO'] },
-  { label: 'Mi Agenda',         path: '/mi-agenda',     roles: ['MEDICO'] },
-  { label: 'Historial Clínico', path: '/historial',     roles: ['ADMIN', 'MEDICO'] },
-  { label: 'Tratamientos',      path: '/tratamientos',  roles: ['ADMIN', 'MEDICO'] },
+  { label: 'Pacientes',         path: '/pacientes',      roles: ['ADMIN', 'MEDICO'] },
+  { label: 'Mi Agenda',         path: '/mi-agenda',      roles: ['MEDICO'] },
+  { label: 'Historial Clínico', path: '/historial',      roles: ['ADMIN', 'MEDICO'] },
+  { label: 'Tratamientos',      path: '/tratamientos',   roles: ['ADMIN', 'MEDICO'] },
   { label: 'Notificaciones',    path: '/notificaciones', roles: ['ADMIN', 'MEDICO'] },
-  { label: 'Reportes',          path: '/reportes',      roles: ['ADMIN'] },
+  { label: 'Reportes',          path: '/reportes',       roles: ['ADMIN'] },
 ];
 
 const Sidebar = () => {
