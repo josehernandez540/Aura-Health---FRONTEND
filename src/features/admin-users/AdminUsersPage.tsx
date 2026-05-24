@@ -293,7 +293,7 @@ const AdminUsersPage = () => {
                       <td style={{ padding: '16px 20px' }}>
                         <div style={{ display: 'flex', gap: '8px' }}>
                           <button
-                            onClick={() => console.log('editar', admin.id)}
+                            onClick={() => navigate(`/admin-users/${admin.id}/edit`)}
                             style={{
                               padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
                               background: '#f0fdfa', color: '#0d9488', border: '1px solid #99f6e4', cursor: 'pointer',

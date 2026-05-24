@@ -39,6 +39,15 @@ export const adminUserService = {
     await api.post('/admin/', payload);
   },
 
+  getAdminUser: async (id: string): Promise<{ success: boolean; data: AdminUser }> => {
+    const response = await api.get(`/admin/${id}`);
+    return response.data;
+  },
+
+  updateAdminUser: async (id: string, payload: { name: string; email: string }): Promise<void> => {
+    await api.put(`/admin/${id}`, payload);
+  },
+
   toggleAdminStatus: async (id: string, isActive: boolean): Promise<void> => {
     await api.patch(`/admin/${id}/status`, { status: isActive ? 'ACTIVE' : 'INACTIVE' });
   },
