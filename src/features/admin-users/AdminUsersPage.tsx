@@ -4,6 +4,7 @@ import { adminUserService } from './adminUser.service';
 import type { AdminUser } from './adminUser.service';
 import RoleGuard from '../../components/RoleGuard';
 import { useAuthStore } from '../auth/authStore';
+import ToggleAdminModal from './ToggleAdminModal';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -37,6 +38,8 @@ const AdminUsersPage = () => {
   const { userId } = useAuthStore();
   const [admins, setAdmins] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [togglingAdmin, setTogglingAdmin] = useState<{ id: string; name: string; isActive: boolean } | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterKey>('Todos');
@@ -61,20 +64,7 @@ const AdminUsersPage = () => {
     fetchAdmins();
   }, []);
 
-  const handleToggleStatus = async (admin: AdminUser) => {
-    const action = admin.isActive ? 'inactivar' : 'activar';
-    const confirmed = window.confirm(
-      `¿Está seguro que desea ${action} al administrador "${admin.name ?? admin.email}"?`
-    );
-    if (!confirmed) return;
-
-    try {
-      await adminUserService.toggleAdminStatus(admin.id, !admin.isActive);
-      await fetchAdmins();
-    } catch {
-      setErrorMessage(`No se pudo ${action} al administrador.`);
-    }
-  };
+  const loadAdmins = fetchAdmins;
 
   const filtered = admins.filter((a) => {
     const matchSearch = a.email.toLowerCase().includes(search.toLowerCase()) ||
@@ -303,7 +293,10 @@ const AdminUsersPage = () => {
                           </button>
                           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}>
                             <button
-                              onClick={() => handleToggleStatus(admin)}
+                              onClick={() => {
+                                setTogglingAdmin({ id: admin.id, name: admin.name ?? admin.email, isActive: admin.isActive });
+                                setToggleModal(true);
+                              }}
                               disabled={admin.id === userId}
                               style={{
                                 padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
@@ -359,6 +352,17 @@ const AdminUsersPage = () => {
         </div>
 
       </div>
+
+      {toggleModal && togglingAdmin && (
+        <ToggleAdminModal
+          isOpen={toggleModal}
+          adminName={togglingAdmin.name}
+          isActive={togglingAdmin.isActive}
+          adminId={togglingAdmin.id}
+          onClose={() => { setToggleModal(false); setTogglingAdmin(null); }}
+          onSuccess={() => { setToggleModal(false); setTogglingAdmin(null); loadAdmins(); }}
+        />
+      )}
     </RoleGuard>
   );
 };
