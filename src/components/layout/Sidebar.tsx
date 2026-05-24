@@ -5,6 +5,7 @@ import { useAuth } from '../../features/auth/useAuth';
 
 const menuItems = [
   { label: 'Médicos',           path: '/medicos',        roles: ['ADMIN'] },
+  { label: 'Administradores',   path: '/admin-users',    roles: ['ADMIN'] },
   { label: 'Citas',             path: '/appointments',   roles: ['ADMIN'] },
   { label: 'Programar Cita',    path: '/programar-cita', roles: ['ADMIN'] },
   { label: 'Pacientes',         path: '/pacientes',      roles: ['ADMIN', 'MEDICO'] },

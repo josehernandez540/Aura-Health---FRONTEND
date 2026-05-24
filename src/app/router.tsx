@@ -13,6 +13,7 @@ import PatientsPage from '../features/patients/PatientsPage';
 import CreatePatientPage from '../features/patients/CreatePatientPage';
 import EditPatientPage from '../features/patients/EditPatientPage';
 import CreateDoctorPage from '../features/users/CreateDoctorPage';
+import AdminUsersPage from '../features/admin-users/AdminUsersPage';
 import { useAuthStore } from '../features/auth/authStore';
 
 const PublicRoute = () => {
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
           { path: 'pacientes', element: <PatientsPage /> },
           { path: 'pacientes/create', element: <CreatePatientPage /> },
           { path: 'pacientes/:id/edit', element: <EditPatientPage /> },
+          { path: 'admin-users', element: <AdminUsersPage /> },
         ],
       },
     ],
