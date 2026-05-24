@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { patientService } from './patient.service';
 import type { Patient } from './patient.service';
+import TogglePatientModal from './TogglePatientModal';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -25,7 +26,8 @@ const PatientsPage = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [togglingId, setTogglingId] = useState<string | null>(null);
+  const [toggleModal, setToggleModal] = useState(false);
+  const [togglingPatient, setTogglingPatient] = useState<{ id: string; name: string; isActive: boolean } | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterKey>('Todos');
   const [page, setPage] = useState(1);
@@ -59,23 +61,7 @@ const PatientsPage = () => {
     fetchPatients();
   }, []);
 
-  const handleToggleStatus = async (patient: Patient) => {
-    const action = patient.isActive ? 'inactivar' : 'activar';
-    const confirmed = window.confirm(
-      `¿Está seguro que desea ${action} al paciente "${patient.name}"?`
-    );
-    if (!confirmed) return;
-
-    setTogglingId(patient.id);
-    try {
-      await patientService.togglePatientStatus(patient.id, !patient.isActive);
-      await fetchPatients();
-    } catch {
-      setErrorMessage(`No se pudo ${action} al paciente.`);
-    } finally {
-      setTogglingId(null);
-    }
-  };
+  const loadPatients = fetchPatients;
 
   const filtered = patients.filter((p) => {
     const matchSearch =
@@ -297,18 +283,19 @@ const PatientsPage = () => {
                         Editar
                       </button>
                       <button
-                        onClick={() => handleToggleStatus(patient)}
-                        disabled={togglingId === patient.id}
+                        onClick={() => {
+                          setTogglingPatient({ id: patient.id, name: patient.name, isActive: patient.isActive });
+                          setToggleModal(true);
+                        }}
                         style={{
                           padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
                           background: patient.isActive ? '#fff7ed' : '#f0fdf4',
                           color: patient.isActive ? '#ea580c' : '#16a34a',
                           border: patient.isActive ? '1px solid #fed7aa' : '1px solid #bbf7d0',
-                          cursor: togglingId === patient.id ? 'wait' : 'pointer',
-                          opacity: togglingId === patient.id ? 0.6 : 1,
+                          cursor: 'pointer',
                         }}
                       >
-                        {togglingId === patient.id ? '...' : patient.isActive ? 'Inactivar' : 'Activar'}
+                        {patient.isActive ? 'Inactivar' : 'Activar'}
                       </button>
                     </div>
                   </td>
@@ -346,6 +333,17 @@ const PatientsPage = () => {
           </div>
         </div>
       </div>
+
+      {toggleModal && togglingPatient && (
+        <TogglePatientModal
+          isOpen={toggleModal}
+          patientName={togglingPatient.name}
+          isActive={togglingPatient.isActive}
+          patientId={togglingPatient.id}
+          onClose={() => { setToggleModal(false); setTogglingPatient(null); }}
+          onSuccess={() => { setToggleModal(false); setTogglingPatient(null); loadPatients(); }}
+        />
+      )}
     </div>
   );
 };
