@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { adminUserService } from './adminUser.service';
 import type { AdminUser } from './adminUser.service';
 import RoleGuard from '../../components/RoleGuard';
@@ -32,6 +33,7 @@ const formatDate = (isoString?: string): string => {
 };
 
 const AdminUsersPage = () => {
+  const navigate = useNavigate();
   const { userId } = useAuthStore();
   const [admins, setAdmins] = useState<AdminUser[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -115,7 +117,7 @@ const AdminUsersPage = () => {
             </p>
           </div>
           <button
-            onClick={() => console.log('crear admin')}
+            onClick={() => navigate('/admin-users/create')}
             style={{
               padding: '10px 20px', borderRadius: '8px', background: '#0d9488',
               color: '#fff', fontWeight: '600', fontSize: '0.875rem',
