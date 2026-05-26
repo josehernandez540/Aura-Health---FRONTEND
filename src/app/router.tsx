@@ -10,7 +10,12 @@ import AppointmentsPage from '../features/appointments/AppointmentsPage';
 import DoctorAgendaPage from '../features/appointments/DoctorAgendaPage';
 import ScheduleAppointmentPage from '../features/appointments/ScheduleAppointmentPage';
 import PatientsPage from '../features/patients/PatientsPage';
+import CreatePatientPage from '../features/patients/CreatePatientPage';
+import EditPatientPage from '../features/patients/EditPatientPage';
 import CreateDoctorPage from '../features/users/CreateDoctorPage';
+import AdminUsersPage from '../features/admin-users/AdminUsersPage';
+import CreateAdminUserPage from '../features/admin-users/CreateAdminUserPage';
+import EditAdminUserPage from '../features/admin-users/EditAdminUserPage';
 import { useAuthStore } from '../features/auth/authStore';
 
 const PublicRoute = () => {
@@ -52,6 +57,11 @@ const router = createBrowserRouter([
           { path: 'appointments/create', element: <ScheduleAppointmentPage /> },
           { path: 'mi-agenda', element: <DoctorAgendaPage /> },
           { path: 'pacientes', element: <PatientsPage /> },
+          { path: 'pacientes/create', element: <CreatePatientPage /> },
+          { path: 'pacientes/:id/edit', element: <EditPatientPage /> },
+          { path: 'admin-users', element: <AdminUsersPage /> },
+          { path: 'admin-users/create', element: <CreateAdminUserPage /> },
+          { path: 'admin-users/:id/edit', element: <EditAdminUserPage /> },
         ],
       },
     ],
