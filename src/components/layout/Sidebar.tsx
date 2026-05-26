@@ -11,7 +11,7 @@ const menuItems = [
   { label: 'Pacientes',         path: '/pacientes',      roles: ['ADMIN', 'MEDICO'] },
   { label: 'Mi Agenda',         path: '/mi-agenda',      roles: ['MEDICO'] },
   { label: 'Historial Clínico', path: '/historial',      roles: ['ADMIN', 'MEDICO'] },
-  { label: 'Tratamientos',      path: '/tratamientos',   roles: ['ADMIN', 'MEDICO'] },
+  { label: 'Tratamientos',      path: '/treatments/create',   roles: ['ADMIN', 'MEDICO'] },
   { label: 'Notificaciones',    path: '/notificaciones', roles: ['ADMIN', 'MEDICO'] },
   { label: 'Reportes',          path: '/reportes',       roles: ['ADMIN'] },
 ];
