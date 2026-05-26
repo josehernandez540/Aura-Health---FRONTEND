@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { patientService } from './patient.service';
 import type { Patient } from './patient.service';
-import TogglePatientModal from './TogglePatientModal';
 
 const ITEMS_PER_PAGE = 8;
 
@@ -21,134 +20,65 @@ const avatarColors: Record<string, string> = {
   Y: '#0d9488', Z: '#1e293b',
 };
 
-const PatientsPage = () => {
+const HistorialListPage = () => {
   const navigate = useNavigate();
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [toggleModal, setToggleModal] = useState(false);
-  const [togglingPatient, setTogglingPatient] = useState<{ id: string; name: string; isActive: boolean } | null>(null);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<FilterKey>('Todos');
   const [page, setPage] = useState(1);
 
-  const fetchPatients = async () => {
-    setIsLoading(true);
-    setErrorMessage(null);
-    try {
-      const response = await patientService.getPatients();
-      if (response.success) {
-        const mapped = response.data.items.map((p) => ({
-          id: p.id,
-          name: p.name,
-          documentNumber: p.document_number,
-          birthDate: p.birth_date,
-          phone: p.phone,
-          email: p.email,
-          isActive: p.is_active,
-          createdAt: p.created_at,
-        }));
-        setPatients(mapped);
-      }
-    } catch {
-      setErrorMessage('No se pudieron cargar los pacientes. Verifique su conexión e intente nuevamente.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchPatients = async () => {
+      setIsLoading(true);
+      try {
+        const response = await patientService.getPatients();
+        if (response.success) {
+          const mapped = response.data.items.map((p) => ({
+            id: p.id,
+            name: p.name,
+            documentNumber: p.document_number,
+            birthDate: p.birth_date,
+            phone: p.phone,
+            email: p.email,
+            isActive: p.is_active,
+            createdAt: p.created_at,
+          }));
+          setPatients(mapped);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
     fetchPatients();
   }, []);
-
-  const loadPatients = fetchPatients;
 
   const filtered = patients.filter((p) => {
     const matchSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.documentNumber.toLowerCase().includes(search.toLowerCase());
-
     let matchFilter = true;
     if (filter === 'Activos') matchFilter = p.isActive;
     else if (filter === 'Inactivos') matchFilter = !p.isActive;
-
     return matchSearch && matchFilter;
   });
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
   const paginated = filtered.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
-
-  const totalActivos = patients.filter((p) => p.isActive).length;
-  const totalInactivos = patients.filter((p) => !p.isActive).length;
-
-  const stats = [
-    { label: 'Total Pacientes', value: patients.length, borderColor: '#0d9488' },
-    { label: 'Activos', value: totalActivos, borderColor: '#0d9488' },
-    { label: 'Inactivos', value: totalInactivos, borderColor: '#f97316' },
-  ];
-
   const startItem = filtered.length === 0 ? 0 : (page - 1) * ITEMS_PER_PAGE + 1;
   const endItem = Math.min(page * ITEMS_PER_PAGE, filtered.length);
 
   return (
     <div style={{ padding: '32px', fontFamily: 'sans-serif', background: '#f8fafc', minHeight: '100vh' }}>
-
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '28px' }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#0f172a' }}>
-            Gestión de Pacientes
-          </h1>
-          <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: '#94a3b8' }}>
-            Inicio / Pacientes
-          </p>
-        </div>
-        <button
-          onClick={() => navigate('/pacientes/create')}
-          style={{
-            padding: '10px 20px', borderRadius: '8px', background: '#0d9488',
-            color: '#fff', fontWeight: '600', fontSize: '0.875rem',
-            border: 'none', cursor: 'pointer',
-          }}
-        >
-          + Nuevo Paciente
-        </button>
+      <div style={{ marginBottom: '28px' }}>
+        <h1 style={{ margin: 0, fontSize: '1.75rem', fontWeight: '700', color: '#0f172a' }}>
+          Historial Clínico
+        </h1>
+        <p style={{ margin: '4px 0 0', fontSize: '0.875rem', color: '#94a3b8' }}>
+          Selecciona un paciente para ver su historial
+        </p>
       </div>
 
-      {/* Stat cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', marginBottom: '28px' }}>
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            style={{
-              background: '#ffffff', borderRadius: '12px',
-              boxShadow: '0 1px 8px rgba(0,0,0,0.06)',
-              padding: '20px 24px',
-              borderLeft: `4px solid ${stat.borderColor}`,
-            }}
-          >
-            <div style={{ fontSize: '2rem', fontWeight: '700', color: '#0f172a', lineHeight: 1 }}>
-              {stat.value}
-            </div>
-            <div style={{ marginTop: '6px', fontSize: '0.875rem', color: '#94a3b8', fontWeight: '500' }}>
-              {stat.label}
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Error banner */}
-      {errorMessage && (
-        <div style={{
-          padding: '12px 16px', borderRadius: '8px', background: '#fef2f2',
-          border: '1px solid #fca5a5', color: '#dc2626', fontSize: '0.875rem',
-          marginBottom: '16px',
-        }}>
-          {errorMessage}
-        </div>
-      )}
-
-      {/* Search + filters */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
         <input
           type="text"
@@ -181,7 +111,6 @@ const PatientsPage = () => {
         </div>
       </div>
 
-      {/* Table */}
       <div style={{ background: '#fff', borderRadius: '12px', boxShadow: '0 1px 8px rgba(0,0,0,0.06)', overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
           <thead>
@@ -222,7 +151,6 @@ const PatientsPage = () => {
                     background: idx % 2 === 0 ? '#ffffff' : '#f8fafc',
                   }}
                 >
-                  {/* PACIENTE */}
                   <td style={{ padding: '16px 20px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                       <div style={{
@@ -233,28 +161,12 @@ const PatientsPage = () => {
                       }}>
                         {getInitial(patient.name)}
                       </div>
-                      <div style={{ fontWeight: '600', color: '#0f172a' }}>
-                        {patient.name}
-                      </div>
+                      <div style={{ fontWeight: '600', color: '#0f172a' }}>{patient.name}</div>
                     </div>
                   </td>
-
-                  {/* DOCUMENTO */}
-                  <td style={{ padding: '16px 20px', color: '#64748b' }}>
-                    {patient.documentNumber}
-                  </td>
-
-                  {/* EMAIL */}
-                  <td style={{ padding: '16px 20px', color: '#64748b' }}>
-                    {patient.email}
-                  </td>
-
-                  {/* TELÉFONO */}
-                  <td style={{ padding: '16px 20px', color: '#94a3b8' }}>
-                    {patient.phone}
-                  </td>
-
-                  {/* ESTADO */}
+                  <td style={{ padding: '16px 20px', color: '#64748b' }}>{patient.documentNumber}</td>
+                  <td style={{ padding: '16px 20px', color: '#64748b' }}>{patient.email}</td>
+                  <td style={{ padding: '16px 20px', color: '#94a3b8' }}>{patient.phone}</td>
                   <td style={{ padding: '16px 20px' }}>
                     <span style={{
                       display: 'inline-flex', alignItems: 'center', gap: '6px',
@@ -269,44 +181,16 @@ const PatientsPage = () => {
                       {patient.isActive ? 'Activo' : 'Inactivo'}
                     </span>
                   </td>
-
-                  {/* ACCIONES */}
                   <td style={{ padding: '16px 20px' }}>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button
-                        onClick={() => navigate(`/historial/${patient.id}`)}
-                        style={{
-                          padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
-                          background: '#f1f5f9', color: '#0d2137', border: '1px solid #e2e8f0', cursor: 'pointer',
-                        }}
-                      >
-                        Ver historial
-                      </button>
-                      <button
-                        onClick={() => navigate(`/pacientes/${patient.id}/edit`)}
-                        style={{
-                          padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
-                          background: '#f0fdfa', color: '#0d9488', border: '1px solid #99f6e4', cursor: 'pointer',
-                        }}
-                      >
-                        Editar
-                      </button>
-                      <button
-                        onClick={() => {
-                          setTogglingPatient({ id: patient.id, name: patient.name, isActive: patient.isActive });
-                          setToggleModal(true);
-                        }}
-                        style={{
-                          padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
-                          background: patient.isActive ? '#fff7ed' : '#f0fdf4',
-                          color: patient.isActive ? '#ea580c' : '#16a34a',
-                          border: patient.isActive ? '1px solid #fed7aa' : '1px solid #bbf7d0',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        {patient.isActive ? 'Inactivar' : 'Activar'}
-                      </button>
-                    </div>
+                    <button
+                      onClick={() => navigate(`/historial/${patient.id}`)}
+                      style={{
+                        padding: '6px 14px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: '500',
+                        background: '#0d9488', color: '#fff', border: 'none', cursor: 'pointer',
+                      }}
+                    >
+                      Ver historial
+                    </button>
                   </td>
                 </tr>
               ))
@@ -314,7 +198,6 @@ const PatientsPage = () => {
           </tbody>
         </table>
 
-        {/* Table footer */}
         <div style={{
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           padding: '16px 20px', borderTop: '1px solid #f1f5f9',
@@ -342,19 +225,8 @@ const PatientsPage = () => {
           </div>
         </div>
       </div>
-
-      {toggleModal && togglingPatient && (
-        <TogglePatientModal
-          isOpen={toggleModal}
-          patientName={togglingPatient.name}
-          isActive={togglingPatient.isActive}
-          patientId={togglingPatient.id}
-          onClose={() => { setToggleModal(false); setTogglingPatient(null); }}
-          onSuccess={() => { setToggleModal(false); setTogglingPatient(null); loadPatients(); }}
-        />
-      )}
     </div>
   );
 };
 
-export default PatientsPage;
+export default HistorialListPage;

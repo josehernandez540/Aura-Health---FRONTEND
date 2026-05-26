@@ -16,6 +16,8 @@ import CreateDoctorPage from '../features/users/CreateDoctorPage';
 import AdminUsersPage from '../features/admin-users/AdminUsersPage';
 import CreateAdminUserPage from '../features/admin-users/CreateAdminUserPage';
 import EditAdminUserPage from '../features/admin-users/EditAdminUserPage';
+import MedicalHistorialPage from '../features/patients/MedicalHistorialPage';
+import HistorialListPage from '../features/patients/HistorialListPage';
 import { useAuthStore } from '../features/auth/authStore';
 
 const PublicRoute = () => {
@@ -62,6 +64,8 @@ const router = createBrowserRouter([
           { path: 'admin-users', element: <AdminUsersPage /> },
           { path: 'admin-users/create', element: <CreateAdminUserPage /> },
           { path: 'admin-users/:id/edit', element: <EditAdminUserPage /> },
+          { path: 'historial', element: <HistorialListPage /> },
+          { path: 'historial/:patientId', element: <MedicalHistorialPage /> },
         ],
       },
     ],
