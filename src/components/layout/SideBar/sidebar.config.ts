@@ -4,6 +4,7 @@ import Patients from "../../../pages/Patients.tsx";
 import AuditPage from "../../../pages/AuditPage.tsx";
 import Dashboard from "../../../pages/Dashboard.tsx";
 import AdminUsersPage from "../../../pages/AdminUsers.tsx";
+import AppointmentsPage from "../../../pages/Appointments.tsx";
 
 interface SidebarItem {
   label: string;
@@ -57,6 +58,7 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         label: 'Citas',
         path: '/appointments',
         icon: 'date.svg',
+        component: AppointmentsPage
       },
       {
         label: 'Historial Clínico',
