@@ -35,7 +35,7 @@ const AdminTable: React.FC<AdminTableProps> = ({ admins, loading, onToggleStatus
         <label className="switch">
           <input 
             type="checkbox" 
-            checked={admin.is_active} 
+            checked={admin.isActive} 
             onChange={() => onToggleStatus(admin)}
           />
           <span className="slider"></span>
