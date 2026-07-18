@@ -15,6 +15,7 @@ import Unauthorized from '../pages/Unauthorized';
 import NotFound from '../pages/notFound';
 import MainLayout from '../components/layout/MainLayout/MainLayout';
 import PatientDetailPage from '../pages/PatientDetailPage';
+import TreatmentDetailPage from '../pages/TreatmentDetailPage';
 
 const Dashboard: React.FC = () => <div>Perfil Example</div>;
 
@@ -63,9 +64,13 @@ export const router = createBrowserRouter([
         path: '/profile', 
         element: <RoleGuard allowedRoles={['ADMIN', 'DOCTOR']}><Dashboard /></RoleGuard> 
       },
-      { 
-        path: '/patients/:id', 
-        element: <RoleGuard allowedRoles={['ADMIN', 'DOCTOR']}><PatientDetailPage /></RoleGuard> 
+      {
+        path: '/patients/:id',
+        element: <RoleGuard allowedRoles={['ADMIN', 'DOCTOR']}><PatientDetailPage /></RoleGuard>
+      },
+      {
+        path: '/treatments/:id',
+        element: <RoleGuard allowedRoles={['ADMIN', 'DOCTOR']}><TreatmentDetailPage /></RoleGuard>
       },
     ],
   },

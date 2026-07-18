@@ -1,0 +1,45 @@
+.medications-section {
+  border-top: 1px solid var(--border);
+  padding-top: var(--gap);
+  margin-top: var(--gap-sm);
+}
+
+.medications-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.medication-row {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.medication-remove-btn {
+  color: var(--danger);
+  font-size: var(--fs-xs);
+}
+
+.requires-approval-group {
+  border-top: 1px solid var(--border);
+  padding-top: var(--gap);
+}
+
+.requires-approval-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+  color: var(--txt);
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.requires-approval-check input {
+  width: 16px;
+  height: 16px;
+}

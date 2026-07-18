@@ -1,0 +1,30 @@
+.treatments-tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: var(--gap);
+}
+
+.treatments-tab {
+  padding: 8px 4px;
+  font-weight: 600;
+  color: var(--txt2);
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.treatments-tab.active {
+  color: var(--accent);
+}
+
+.treatments-tab.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 3px 3px 0 0;
+}
