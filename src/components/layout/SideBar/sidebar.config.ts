@@ -5,6 +5,7 @@ import AuditPage from "../../../pages/AuditPage.tsx";
 import Dashboard from "../../../pages/Dashboard.tsx";
 import AdminUsersPage from "../../../pages/AdminUsers.tsx";
 import AppointmentsPage from "../../../pages/Appointments.tsx";
+import RecordsPage from "../../../pages/Records.tsx";
 
 interface SidebarItem {
   label: string;
@@ -64,6 +65,7 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         label: 'Historial Clínico',
         path: '/records',
         icon: 'documents.svg',
+        component: RecordsPage
       },
       {
         label: 'Pacientes',

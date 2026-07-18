@@ -1,0 +1,37 @@
+.file-drop-zone {
+  border: 2px dashed var(--accent);
+  border-radius: var(--radius-sm);
+  padding: var(--gap-lg);
+  text-align: center;
+  cursor: pointer;
+  background: rgba(59, 130, 246, 0.05);
+  transition: background var(--t-fast);
+}
+.file-drop-zone:hover,
+.file-drop-zone.drag-over {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.file-drop-zone.has-file {
+  border-style: solid;
+  border-color: var(--success);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.file-drop-icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: var(--gap-sm);
+  opacity: 0.8;
+}
+
+.file-drop-label {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.file-drop-hint {
+  font-size: var(--fs-xs);
+  color: var(--txt3);
+  margin-top: 4px;
+}
