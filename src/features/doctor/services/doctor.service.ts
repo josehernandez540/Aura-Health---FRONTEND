@@ -47,26 +47,26 @@ interface ApiResponse<T> {
 }
 
 export const getMedicos = async (): Promise<Doctor[]> => {
-  const { data } = await api.get<ApiResponse<Doctor>>("v1/doctors");
+  const { data } = await api.get<ApiResponse<Doctor>>("/doctors");
   return data.data.items;
 };
 
 export const createDoctor = async (payload: Omit<Doctor, 'id' | 'is_active'>) => {
-  const { data } = await api.post("v1/doctors", payload);
+  const { data } = await api.post("/doctors", payload);
   return data;
 };
 
 export const toggleMedicoStatus = async (id: string) => {
-  const { data } = await api.patch<{ message: string }>(`/v1/doctors/${id}/status`);
+  const { data } = await api.patch<{ message: string }>(`/doctors/${id}/status`);
   return data;
 };
 
 export const getDoctorById = async (id: string): Promise<Doctor> => {
-  const { data } = await api.get<{ data: Doctor }>(`/v1/doctors/${id}`);
+  const { data } = await api.get<{ data: Doctor }>(`/doctors/${id}`);
   return data.data;
 };
 
 export const updateDoctor = async (id: string, payload: Partial<Doctor>) => {
-  const { data } = await api.put(`/v1/doctors/${id}`, payload);
+  const { data } = await api.put(`/doctors/${id}`, payload);
   return data;
 };

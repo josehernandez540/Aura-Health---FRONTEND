@@ -11,21 +11,21 @@ export interface AdminUser {
 }
 
 export const getAdminUsers = async (params?: { search?: string; page?: number; limit?: number }) => {
-  const response = await api.get("/v1/admin", { params });
+  const response = await api.get("/admin", { params });
   return response.data;
 };
 
 export const createAdminUser = async (data: AdminUserFormData) => {
-  const response = await api.post("/v1/admin", data);
+  const response = await api.post("/admin", data);
   return response.data;
 };
 
 export const updateAdminUser = async (id: string, data: AdminUserFormData) => {
-  const response = await api.put(`/v1/admin/${id}`, data);
+  const response = await api.put(`/admin/${id}`, data);
   return response.data;
 };
 
 export const updateAdminStatus = async (id: string, status: 'ACTIVE' | 'INACTIVE') => {
-  const response = await api.patch(`/v1/admin/${id}/status`, { status });
+  const response = await api.patch(`/admin/${id}/status`, { status });
   return response.data;
 };

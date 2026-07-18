@@ -27,6 +27,6 @@ export interface AuditResponse {
 }
 
 export const getAuditLogs = async (params: Record<string, any> = {}): Promise<AuditResponse> => {
-  const res = await api.get<{ data: AuditResponse }>('/v1/audit', { params });
+  const res = await api.get<{ data: AuditResponse }>('/audit', { params });
   return res.data.data;
 };
