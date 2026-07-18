@@ -1,10 +1,13 @@
 import React from "react";
 import DataTable from "../../../components/common/Datatable/Datatable";
+import Button from "../../../components/ui/Button/Button";
 import { type Appointment } from "../services/appointment.service";
+import { hasRole } from "../../../utils/hasRole";
 
 interface AppointmentTableProps {
   appointments: Appointment[];
   loading: boolean;
+  onCancel: (appointment: Appointment) => void;
 }
 
 const STATUS_INFO: Record<string, { label: string; className: string }> = {
@@ -14,7 +17,9 @@ const STATUS_INFO: Record<string, { label: string; className: string }> = {
   NO_SHOW: { label: "No asistió", className: "badge status-pending" },
 };
 
-const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loading }) => {
+const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loading, onCancel }) => {
+  const canCancel = hasRole(["ADMIN"]);
+
   const columns = [
     {
       header: "Paciente",
@@ -56,6 +61,27 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loadi
         };
         return <span className={info.className}>{info.label}</span>;
       },
+    },
+    {
+      header: "Acciones",
+      key: "actions",
+      render: (appointment: Appointment) =>
+        canCancel && appointment.status === "SCHEDULED" ? (
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              variant="danger"
+              style={{ width: "auto" }}
+              onClick={() => onCancel(appointment)}
+            >
+              <img
+                src="icons/close.svg"
+                width={16}
+                alt="cancelar"
+                style={{ filter: "brightness(0) invert(1)" }}
+              />
+            </Button>
+          </div>
+        ) : null,
     },
   ];
 

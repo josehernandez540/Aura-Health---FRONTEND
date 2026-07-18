@@ -41,3 +41,13 @@ export const createAppointmentSchema = z
   });
 
 export type AppointmentFormInput = z.infer<typeof createAppointmentSchema>;
+
+export const cancelAppointmentSchema = z.object({
+  reason: z
+    .string()
+    .trim()
+    .min(10, "El motivo debe tener al menos 10 caracteres")
+    .max(500, "El motivo no puede superar los 500 caracteres"),
+});
+
+export type CancelAppointmentFormInput = z.infer<typeof cancelAppointmentSchema>;

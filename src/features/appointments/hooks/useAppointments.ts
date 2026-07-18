@@ -4,10 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   createAppointmentSchema,
   type AppointmentFormInput,
+  cancelAppointmentSchema,
+  type CancelAppointmentFormInput,
 } from "../schemas/appointment.schema";
 import {
   getAppointments,
   createAppointment,
+  cancelAppointment,
   type Appointment,
 } from "../services/appointment.service";
 import { useUIStore } from "../../../store/ui.store";
@@ -154,6 +157,48 @@ export const useCreateAppointment = (onSuccess?: () => void) => {
     isSubmitting,
     setValue,
     watch,
+    reset,
+  };
+};
+
+export const useCancelAppointment = (
+  appointmentId: string | null,
+  onSuccess?: () => void
+) => {
+  const showToast = useUIStore((state) => state.showToast);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<CancelAppointmentFormInput>({
+    resolver: zodResolver(cancelAppointmentSchema),
+    defaultValues: { reason: "" },
+  });
+
+  const onSubmit = async (data: CancelAppointmentFormInput) => {
+    if (!appointmentId) return;
+
+    try {
+      await cancelAppointment(appointmentId, data.reason);
+      showToast("Cita cancelada correctamente", "success");
+
+      if (onSuccess) onSuccess();
+
+      reset();
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || "Error al cancelar la cita";
+      showToast(message, "error");
+    }
+  };
+
+  return {
+    register,
+    handleSubmit: handleSubmit(onSubmit),
+    errors,
+    isSubmitting,
     reset,
   };
 };

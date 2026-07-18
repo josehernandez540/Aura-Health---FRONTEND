@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import PageHeader from "../components/common/PageHeader";
 import AppointmentTable from "../features/appointments/components/AppointmentTable";
 import CreateAppointmentModal from "../features/appointments/components/CreateAppointmentModal";
+import CancelAppointmentModal from "../features/appointments/components/CancelAppointmentModal";
 import { useAppointmentsList } from "../features/appointments/hooks/useAppointments";
+import { type Appointment } from "../features/appointments/services/appointment.service";
 
 const AppointmentsPage: React.FC = () => {
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [cancelTarget, setCancelTarget] = useState<Appointment | null>(null);
   const { appointments, loading, fetchAppointments } = useAppointmentsList();
 
   return (
@@ -17,11 +20,22 @@ const AppointmentsPage: React.FC = () => {
         textButton="Nueva Cita"
       />
 
-      <AppointmentTable appointments={appointments} loading={loading} />
+      <AppointmentTable
+        appointments={appointments}
+        loading={loading}
+        onCancel={setCancelTarget}
+      />
 
       <CreateAppointmentModal
         isOpen={isCreateOpen}
         onClose={() => setIsCreateOpen(false)}
+        onSuccess={fetchAppointments}
+      />
+
+      <CancelAppointmentModal
+        isOpen={!!cancelTarget}
+        appointmentId={cancelTarget?.id ?? null}
+        onClose={() => setCancelTarget(null)}
         onSuccess={fetchAppointments}
       />
     </>

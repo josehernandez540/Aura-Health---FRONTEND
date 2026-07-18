@@ -47,3 +47,11 @@ export const createAppointment = async (payload: CreateAppointmentPayload) => {
   const { data } = await api.post<{ message: string }>("/appointments", payload);
   return data;
 };
+
+export const cancelAppointment = async (id: string, reason: string) => {
+  const { data } = await api.patch<{ message: string }>(
+    `/appointments/${id}/cancel`,
+    { reason }
+  );
+  return data;
+};
