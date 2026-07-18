@@ -49,6 +49,33 @@
 
   --sidebar-w:  260px;
   --topbar-h:   64px;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg:       #f4f6fb;
+  --surface:  #ffffff;
+  --surface2: #eef1f7;
+  --card:     #ffffff;
+  --overlay:  rgba(15, 23, 42, 0.45);
+
+  --border:   #dde3ee;
+  --border2:  #e5e9f2;
+
+  --accent:   #2563eb;
+  --accent2:  #0891b2;
+  --success:  #059669;
+  --warning:  #d97706;
+  --danger:   #dc2626;
+
+  --txt:  #1e293b;
+  --txt2: #475569;
+  --txt3: #64748b;
+
+  --shadow:    0 4px 24px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 20px 40px rgba(15, 23, 42, 0.12);
 }
 
 *, *::before, *::after {
@@ -63,6 +90,7 @@ body {
   color: var(--txt);
   min-height: 100vh;
   overflow-x: hidden;
+  transition: background var(--t), color var(--t);
 }
 a { color: inherit; text-decoration: none; }
 button { font-family: inherit; cursor: pointer; border: none; background: none; }

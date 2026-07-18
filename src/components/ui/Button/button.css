@@ -58,12 +58,12 @@
 
 .btn-secondary {
   background: transparent;
-  color: #a1a1aa;
-  border: 1px solid #27272a;
+  color: var(--txt2);
+  border: 1px solid var(--border);
 }
 
 .btn-secondary:hover {
-  border-color: #52525b;
-  color: #e4e4e7;
-  background-color: rgba(161, 161, 170, 0.05);
+  border-color: var(--txt3);
+  color: var(--txt);
+  background-color: var(--card);
 }

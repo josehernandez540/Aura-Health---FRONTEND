@@ -50,6 +50,9 @@
   margin: 0;
   line-height: 1.4;
 }
+:root[data-theme="light"] .toast-message {
+  color: #1e293b;
+}
 
 .toast-close {
   background: transparent;
@@ -68,6 +71,9 @@
   width: 14px;
   height: 14px;
   filter: invert(1);
+}
+:root[data-theme="light"] .toast-close img {
+  filter: invert(0.3);
 }
 
 .toast-success .toast-side-border {
@@ -124,6 +130,9 @@
   height: 2px;
   width: 100%;
   background: rgba(255, 255, 255, 0.1);
+}
+:root[data-theme="light"] .toast-timer-bar {
+  background: rgba(15, 23, 42, 0.08);
 }
 
 .toast-timer-bar::after {

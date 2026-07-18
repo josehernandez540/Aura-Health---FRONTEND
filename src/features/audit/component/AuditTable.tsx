@@ -72,11 +72,11 @@ const AuditTable: React.FC = () => {
 
         <div className="audit-pagination">
           <button onClick={() => setPage(p => p - 1)} disabled={page === 1} className="pag-btn">
-            <img src="icons/back.svg" alt="Atrás" />
+            <img src="icons/back.svg" alt="Atrás" width={16} className="icon-img-color" />
           </button>
           <span className="pag-info">Página {page} de {totalPages}</span>
           <button onClick={() => setPage(p => p + 1)} disabled={page === totalPages} className="pag-btn">
-            <img src="icons/next.svg" alt="Siguiente" />
+            <img src="icons/next.svg" alt="Siguiente" width={16} className="icon-img-color" />
           </button>
         </div>
 

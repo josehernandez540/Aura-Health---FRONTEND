@@ -142,6 +142,45 @@
   color: #a1a1aa;
 }
 
+:root[data-theme="light"] .badge-login,
+:root[data-theme="light"] .calendar-pill.badge-login {
+  background: rgba(124, 58, 237, 0.12);
+  color: #7c3aed;
+}
+:root[data-theme="light"] .badge-create {
+  background: rgba(5, 150, 105, 0.12);
+  color: #059669;
+}
+:root[data-theme="light"] .badge-update,
+:root[data-theme="light"] .status-pending,
+:root[data-theme="light"] .calendar-pill.status-pending {
+  background: rgba(217, 119, 6, 0.12);
+  color: #b45309;
+}
+:root[data-theme="light"] .badge-delete,
+:root[data-theme="light"] .status-cancelled,
+:root[data-theme="light"] .calendar-pill.status-cancelled {
+  background: rgba(220, 38, 38, 0.12);
+  color: #dc2626;
+}
+:root[data-theme="light"] .badge-gray,
+:root[data-theme="light"] .status-inactive {
+  background: rgba(100, 116, 139, 0.12);
+  color: #475569;
+}
+:root[data-theme="light"] .badge-blue,
+:root[data-theme="light"] .status-scheduled,
+:root[data-theme="light"] .calendar-pill.status-scheduled {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+}
+:root[data-theme="light"] .status-completed,
+:root[data-theme="light"] .status-active,
+:root[data-theme="light"] .calendar-pill.status-completed {
+  background: rgba(5, 150, 105, 0.12);
+  color: #059669;
+}
+
 .truncate {
   display: block;
   white-space: nowrap;
@@ -211,4 +250,7 @@
   cursor: pointer;
   filter: invert(1);
   opacity: 0.6;
+}
+:root[data-theme="light"] .date-input::-webkit-calendar-picker-indicator {
+  filter: invert(0.4);
 }

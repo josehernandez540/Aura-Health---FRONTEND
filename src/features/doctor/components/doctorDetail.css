@@ -108,7 +108,7 @@
 .stat-val {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--txt);
 }
 .stat-lbl {
   font-size: var(--fs-xs);
@@ -184,4 +184,26 @@
   display: flex;
   gap: 20px;
   justify-content: flex-end;
+}
+
+:root[data-theme="light"] .detail-header-new {
+  background: rgba(15, 23, 42, 0.03);
+  border-color: rgba(15, 23, 42, 0.08);
+}
+:root[data-theme="light"] .stat-card {
+  background: rgba(15, 23, 42, 0.03);
+  border-color: rgba(15, 23, 42, 0.08);
+}
+:root[data-theme="light"] .status-dot {
+  background: rgba(15, 23, 42, 0.04);
+}
+:root[data-theme="light"] .list-item {
+  background: rgba(15, 23, 42, 0.02);
+}
+:root[data-theme="light"] .id-code,
+:root[data-theme="light"] .license-tag {
+  color: #4f46e5;
+}
+:root[data-theme="light"] .id-code {
+  background: rgba(15, 23, 42, 0.06);
 }

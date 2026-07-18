@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../../../features/auth/store/auth.store';
+import { useThemeStore } from '../../../store/theme.store';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './navbar.css';
 
@@ -8,6 +9,7 @@ const Navbar: React.FC = () => {
   const location = useLocation();
 
   const { role, logout } = useAuthStore();
+  const { theme, toggleTheme } = useThemeStore();
   const [time, setTime] = useState<string>('');
 
   useEffect(() => {
@@ -53,7 +55,16 @@ const Navbar: React.FC = () => {
           {time}
         </span>
 
-        <div className="theme-toggle" id="theme-toggle" title="Cambiar tema"></div>
+        <button
+          type="button"
+          className={`theme-toggle ${theme === 'light' ? 'on' : ''}`}
+          id="theme-toggle"
+          title="Cambiar tema"
+          role="switch"
+          aria-checked={theme === 'light'}
+          aria-label="Cambiar tema claro/oscuro"
+          onClick={toggleTheme}
+        ></button>
 
         <button
           className="btn btn-ghost btn-sm"
