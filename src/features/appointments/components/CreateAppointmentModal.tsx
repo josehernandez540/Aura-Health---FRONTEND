@@ -6,6 +6,7 @@ import Button from "../../../components/ui/Button/Button";
 import { useCreateAppointment, useAvailableSlots } from "../hooks/useAppointments";
 import { useMedicos } from "../../doctor/hooks/useDoctorsList";
 import { usePatientsList } from "../../patients/hooks/usePatientsList";
+import SlotGrid from "./SlotGrid";
 import "./appointmentModal.css";
 
 interface CreateAppointmentModalProps {
@@ -118,42 +119,15 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
 
           {!doctorId || !date ? (
             <div className="slot-placeholder">
-              Selecciona el médico y el dia primero 
+              Selecciona el médico y el dia primero
             </div>
           ) : (
-            <>
-              <div className="slot-grid">
-                {slots.map((slot) => (
-                  <button
-                    key={slot.time}
-                    type="button"
-                    disabled={slot.status === "occupied" || loadingSlots}
-                    className={`slot-btn ${
-                      slot.status === "occupied"
-                        ? "occupied"
-                        : startTime === slot.time
-                        ? "selected"
-                        : ""
-                    }`}
-                    onClick={() => handleSlotClick(slot.time, slot.endTime)}
-                  >
-                    {slot.time}
-                  </button>
-                ))}
-              </div>
-
-              <div className="slot-legend">
-                <span>
-                  <span className="slot-legend-dot occupied" />
-                  Ocupado
-                </span>
-                <span>
-                  <span className="slot-legend-dot selected" />
-                  Seleccionado
-                </span>
-                <span>Blanco = Disponible</span>
-              </div>
-            </>
+            <SlotGrid
+              slots={slots}
+              selectedTime={startTime}
+              onSelect={handleSlotClick}
+              loading={loadingSlots}
+            />
           )}
 
           {errors.endTime && (

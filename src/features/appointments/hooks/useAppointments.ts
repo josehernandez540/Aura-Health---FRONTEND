@@ -6,11 +6,17 @@ import {
   type AppointmentFormInput,
   cancelAppointmentSchema,
   type CancelAppointmentFormInput,
+  rescheduleAppointmentSchema,
+  type RescheduleAppointmentFormInput,
+  noShowAppointmentSchema,
+  type NoShowAppointmentFormInput,
 } from "../schemas/appointment.schema";
 import {
   getAppointments,
   createAppointment,
   cancelAppointment,
+  rescheduleAppointment,
+  markNoShow,
   type Appointment,
 } from "../services/appointment.service";
 import { useUIStore } from "../../../store/ui.store";
@@ -55,13 +61,17 @@ export const useAppointmentsList = () => {
   return { appointments, loading, fetchAppointments };
 };
 
-interface SlotState {
+export interface SlotState {
   time: string;
   endTime: string;
   status: "available" | "occupied";
 }
 
-export const useAvailableSlots = (doctorId: string, date: string) => {
+export const useAvailableSlots = (
+  doctorId: string,
+  date: string,
+  excludeAppointmentId?: string
+) => {
   const [occupied, setOccupied] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
 
@@ -79,10 +89,14 @@ export const useAvailableSlots = (doctorId: string, date: string) => {
         const data = await getAppointments({ doctorId, date, status: "SCHEDULED" });
         if (cancelled) return;
 
+        const relevant = data.items.filter(
+          (apt) => apt.id !== excludeAppointmentId
+        );
+
         const busy = new Set<string>();
         DAILY_SLOTS.forEach((slot) => {
           const slotEnd = addMinutes(slot, SLOT_DURATION_MINUTES);
-          const overlaps = data.items.some(
+          const overlaps = relevant.some(
             (apt) => slot < apt.endTime && slotEnd > apt.startTime
           );
           if (overlaps) busy.add(slot);
@@ -98,7 +112,7 @@ export const useAvailableSlots = (doctorId: string, date: string) => {
     return () => {
       cancelled = true;
     };
-  }, [doctorId, date]);
+  }, [doctorId, date, excludeAppointmentId]);
 
   const slots: SlotState[] = useMemo(
     () =>
@@ -190,6 +204,99 @@ export const useCancelAppointment = (
     } catch (error: any) {
       const message =
         error.response?.data?.message || "Error al cancelar la cita";
+      showToast(message, "error");
+    }
+  };
+
+  return {
+    register,
+    handleSubmit: handleSubmit(onSubmit),
+    errors,
+    isSubmitting,
+    reset,
+  };
+};
+
+export const useRescheduleAppointment = (
+  appointment: Appointment | null,
+  onSuccess?: () => void
+) => {
+  const showToast = useUIStore((state) => state.showToast);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<RescheduleAppointmentFormInput>({
+    resolver: zodResolver(rescheduleAppointmentSchema),
+    defaultValues: {
+      newDate: "",
+      newStartTime: "",
+      newEndTime: "",
+      reason: "",
+    },
+  });
+
+  const onSubmit = async (data: RescheduleAppointmentFormInput) => {
+    if (!appointment) return;
+
+    try {
+      await rescheduleAppointment(appointment.id, data);
+      showToast("Cita reprogramada correctamente", "success");
+
+      if (onSuccess) onSuccess();
+
+      reset();
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || "Error al reprogramar la cita";
+      showToast(message, "error");
+    }
+  };
+
+  return {
+    register,
+    handleSubmit: handleSubmit(onSubmit),
+    errors,
+    isSubmitting,
+    setValue,
+    watch,
+    reset,
+  };
+};
+
+export const useMarkNoShow = (
+  appointmentId: string | null,
+  onSuccess?: () => void
+) => {
+  const showToast = useUIStore((state) => state.showToast);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<NoShowAppointmentFormInput>({
+    resolver: zodResolver(noShowAppointmentSchema),
+    defaultValues: { reason: "" },
+  });
+
+  const onSubmit = async (data: NoShowAppointmentFormInput) => {
+    if (!appointmentId) return;
+
+    try {
+      await markNoShow(appointmentId, data.reason || undefined);
+      showToast("Cita marcada como inasistencia", "success");
+
+      if (onSuccess) onSuccess();
+
+      reset();
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || "Error al marcar la inasistencia";
       showToast(message, "error");
     }
   };

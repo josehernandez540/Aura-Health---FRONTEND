@@ -8,6 +8,8 @@ interface AppointmentTableProps {
   appointments: Appointment[];
   loading: boolean;
   onCancel: (appointment: Appointment) => void;
+  onReschedule: (appointment: Appointment) => void;
+  onNoShow: (appointment: Appointment) => void;
 }
 
 const STATUS_INFO: Record<string, { label: string; className: string }> = {
@@ -17,7 +19,13 @@ const STATUS_INFO: Record<string, { label: string; className: string }> = {
   NO_SHOW: { label: "No asistió", className: "badge status-pending" },
 };
 
-const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loading, onCancel }) => {
+const AppointmentTable: React.FC<AppointmentTableProps> = ({
+  appointments,
+  loading,
+  onCancel,
+  onReschedule,
+  onNoShow,
+}) => {
   const canCancel = hasRole(["ADMIN"]);
 
   const columns = [
@@ -68,6 +76,20 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({ appointments, loadi
       render: (appointment: Appointment) =>
         canCancel && appointment.status === "SCHEDULED" ? (
           <div className="flex items-center justify-end gap-2">
+            <Button
+              variant="ghost"
+              style={{ width: "auto" }}
+              onClick={() => onReschedule(appointment)}
+            >
+              <img src="icons/date.svg" width={16} alt="reprogramar" className="icon-img-color" />
+            </Button>
+            <Button
+              variant="ghost"
+              style={{ width: "auto" }}
+              onClick={() => onNoShow(appointment)}
+            >
+              <img src="icons/warning.svg" width={16} alt="marcar inasistencia" className="icon-img-color" />
+            </Button>
             <Button
               variant="danger"
               style={{ width: "auto" }}

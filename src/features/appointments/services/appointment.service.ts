@@ -55,3 +55,29 @@ export const cancelAppointment = async (id: string, reason: string) => {
   );
   return data;
 };
+
+export type ReschedulePayload = {
+  newDate: string;
+  newStartTime: string;
+  newEndTime: string;
+  reason?: string;
+};
+
+export const rescheduleAppointment = async (
+  id: string,
+  payload: ReschedulePayload
+) => {
+  const { data } = await api.patch<{ message: string }>(
+    `/appointments/${id}/reschedule`,
+    payload
+  );
+  return data;
+};
+
+export const markNoShow = async (id: string, reason?: string) => {
+  const { data } = await api.patch<{ message: string }>(
+    `/appointments/${id}/no-show`,
+    { reason }
+  );
+  return data;
+};
