@@ -66,6 +66,13 @@ const DoctorFilterSelect: React.FC<DoctorFilterSelectProps> = ({ value, onChange
   );
 };
 
+const STATUS_LABEL: Record<string, string> = {
+  SCHEDULED: "Programada",
+  COMPLETED: "Completada",
+  CANCELLED: "Cancelada",
+  NO_SHOW: "No asistió",
+};
+
 const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
   appointments,
   loading,
@@ -74,6 +81,8 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
   onDropReschedule,
 }) => {
   const isAdmin = hasRole(["ADMIN"]);
+  const canModify = hasRole(["ADMIN", "DOCTOR"]);
+  const today = useMemo(() => toISODate(new Date()), []);
   const [currentMonth, setCurrentMonth] = useState(() => {
     const d = new Date();
     return new Date(d.getFullYear(), d.getMonth(), 1);
@@ -114,7 +123,7 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
   const handleDrop = (e: React.DragEvent, dateKey: string, isOutside: boolean) => {
     e.preventDefault();
     setDragOverDate(null);
-    if (isOutside) return;
+    if (isOutside || !canModify) return;
 
     const id = e.dataTransfer.getData("text/plain");
     const appointment = appointments.find((a) => a.id === id);
@@ -151,6 +160,7 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
         {days.map((day) => {
           const dateKey = toISODate(day);
           const isOutside = day.getMonth() !== currentMonth.getMonth();
+          const isToday = dateKey === today;
           const dayAppointments = appointmentsByDate.get(dateKey) ?? [];
           const visible = dayAppointments.slice(0, MAX_PILLS_PER_DAY);
           const overflow = dayAppointments.length - visible.length;
@@ -158,26 +168,29 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
           return (
             <div
               key={dateKey}
-              className={`calendar-cell ${isOutside ? "outside" : ""} ${
+              className={`calendar-cell ${isOutside ? "outside" : ""} ${isToday ? "today" : ""} ${
                 dragOverDate === dateKey ? "drag-over" : ""
-              }`}
+              } ${overflow > 0 ? "has-overflow" : ""}`}
               onClick={() => isAdmin && !isOutside && onCreateOnDate(dateKey)}
               onDragOver={(e) => {
-                if (!isAdmin || isOutside) return;
+                if (!canModify || isOutside) return;
                 e.preventDefault();
                 setDragOverDate(dateKey);
               }}
               onDragLeave={() => setDragOverDate(null)}
-              onDrop={(e) => isAdmin && handleDrop(e, dateKey, isOutside)}
+              onDrop={(e) => handleDrop(e, dateKey, isOutside)}
             >
-              <span className="calendar-day-number">{day.getDate()}</span>
+              <span className="calendar-day-number">
+                {isToday && <span className="calendar-today-dot" />}
+                {day.getDate()}
+              </span>
 
               {!loading &&
                 visible.map((appointment) => (
                   <div
                     key={appointment.id}
                     className={`calendar-pill ${STATUS_CLASS[appointment.status] ?? ""}`}
-                    draggable={isAdmin && appointment.status === "SCHEDULED"}
+                    draggable={canModify && appointment.status === "SCHEDULED"}
                     onDragStart={(e) => {
                       e.stopPropagation();
                       handleDragStart(e, appointment);
@@ -191,15 +204,41 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
                   </div>
                 ))}
 
-              {overflow > 0 && <span className="calendar-pill-more">+{overflow} más</span>}
+              {overflow > 0 && (
+                <>
+                  <span className="calendar-pill-more">+{overflow} más</span>
+
+                  <div className="calendar-day-popover" onClick={(e) => e.stopPropagation()}>
+                    <div className="calendar-day-popover-header">
+                      {day.toLocaleDateString("es-CO", { weekday: "long", day: "numeric", month: "long" })}
+                      <span className="count-pill">{dayAppointments.length}</span>
+                    </div>
+                    <div className="calendar-day-popover-list">
+                      {dayAppointments.map((appointment) => (
+                        <div
+                          key={appointment.id}
+                          className={`calendar-pill ${STATUS_CLASS[appointment.status] ?? ""}`}
+                          onClick={() => onQuickView(appointment)}
+                        >
+                          <span>{appointment.startTime} {appointment.patient?.name}</span>
+                          <span className="calendar-day-popover-status">
+                            {STATUS_LABEL[appointment.status] ?? appointment.status}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           );
         })}
       </div>
 
-      {isAdmin && (
+      {canModify && (
         <p className="calendar-hint">
-          💡 Arrastra las citas entre días para reprogramar · Click en un día vacío para crear cita
+          💡 Arrastra las citas entre días para reprogramar
+          {isAdmin && " · Click en un día vacío para crear cita"}
         </p>
       )}
     </div>

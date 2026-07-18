@@ -28,7 +28,7 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
   onNoShow,
   onHistory,
 }) => {
-  const isAdmin = hasRole(["ADMIN"]);
+  const canModify = hasRole(["ADMIN", "DOCTOR"]);
 
   const columns = [
     {
@@ -76,7 +76,7 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
       header: "Acciones",
       key: "actions",
       render: (appointment: Appointment) =>
-        isAdmin ? (
+        canModify ? (
           <div className="flex items-center justify-end gap-2">
             <Button
               variant="ghost"

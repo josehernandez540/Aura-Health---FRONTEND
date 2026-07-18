@@ -18,6 +18,7 @@ import { hasRole } from "../utils/hasRole";
 
 const AppointmentsPage: React.FC = () => {
   const isAdmin = hasRole(["ADMIN"]);
+  const canModify = hasRole(["ADMIN", "DOCTOR"]);
   const [view, setView] = useState<"list" | "calendar">("list");
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [createDate, setCreateDate] = useState<string | undefined>(undefined);
@@ -101,14 +102,16 @@ const AppointmentsPage: React.FC = () => {
       )}
 
       {isAdmin && (
-        <>
-          <CreateAppointmentModal
-            isOpen={isCreateOpen}
-            initialDate={createDate}
-            onClose={() => setIsCreateOpen(false)}
-            onSuccess={fetchAppointments}
-          />
+        <CreateAppointmentModal
+          isOpen={isCreateOpen}
+          initialDate={createDate}
+          onClose={() => setIsCreateOpen(false)}
+          onSuccess={fetchAppointments}
+        />
+      )}
 
+      {canModify && (
+        <>
           <CancelAppointmentModal
             isOpen={!!cancelTarget}
             appointmentId={cancelTarget?.id ?? null}

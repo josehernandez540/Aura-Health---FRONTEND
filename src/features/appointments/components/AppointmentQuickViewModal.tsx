@@ -30,7 +30,7 @@ const AppointmentQuickViewModal: React.FC<AppointmentQuickViewModalProps> = ({
 }) => {
   if (!appointment) return null;
 
-  const isAdmin = hasRole(["ADMIN"]);
+  const canModify = hasRole(["ADMIN", "DOCTOR"]);
   const info = STATUS_INFO[appointment.status] ?? {
     label: appointment.status,
     className: "badge",
@@ -56,7 +56,7 @@ const AppointmentQuickViewModal: React.FC<AppointmentQuickViewModalProps> = ({
           <strong>Estado:</strong> <span className={info.className}>{info.label}</span>
         </p>
 
-        {isAdmin && (
+        {canModify && (
           <div className="flex items-center gap-2" style={{ marginTop: "var(--gap)", flexWrap: "wrap" }}>
             <Button variant="ghost" onClick={() => onHistory(appointment)}>
               Ver historial
