@@ -7,8 +7,10 @@ import PatientFilterBar, { type PatientFilters } from "../features/patients/comp
 import { usePatientsList } from "../features/patients/hooks/usePatientsList";
 import { type Patient } from "../features/patients/services/patient.services";
 import { getPatientById } from "../features/patients/services/patient.services";
+import { hasRole } from "../utils/hasRole";
 
 const PatientsPage: React.FC = () => {
+  const isAdmin = hasRole(["ADMIN"]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -56,7 +58,7 @@ const PatientsPage: React.FC = () => {
       <PageHeader
         title="Gestión de Pacientes"
         subtitle="Administra la información y el estado de los pacientes"
-        onClick={() => setIsCreateOpen(true)}
+        onClick={isAdmin ? () => setIsCreateOpen(true) : undefined}
         textButton="Nuevo Paciente"
       />
 
@@ -69,18 +71,22 @@ const PatientsPage: React.FC = () => {
         onEdit={handleOpenEdit}
       />
 
-      <CreatePatientModal
-        isOpen={isCreateOpen}
-        onClose={() => setIsCreateOpen(false)}
-        onSuccess={fetchPatients}
-      />
+      {isAdmin && (
+        <>
+          <CreatePatientModal
+            isOpen={isCreateOpen}
+            onClose={() => setIsCreateOpen(false)}
+            onSuccess={fetchPatients}
+          />
 
-      <EditPatientModal
-        isOpen={isEditOpen}
-        onClose={() => setIsEditOpen(false)}
-        patient={selectedPatient}
-        onSuccess={fetchPatients}
-      />
+          <EditPatientModal
+            isOpen={isEditOpen}
+            onClose={() => setIsEditOpen(false)}
+            patient={selectedPatient}
+            onSuccess={fetchPatients}
+          />
+        </>
+      )}
     </>
   );
 };

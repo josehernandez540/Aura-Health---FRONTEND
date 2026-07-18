@@ -5,6 +5,7 @@ import { type Patient } from '../services/patient.services';
 import { avatarColors, getInitials } from '../../../utils/tableUtils';
 import { useNavigate } from 'react-router-dom';
 import { getRiskInfo } from '../../../utils/risk';
+import { hasRole } from '../../../utils/hasRole';
 
 
 interface PatientTableProps {
@@ -16,8 +17,9 @@ interface PatientTableProps {
 
 const PatientTable: React.FC<PatientTableProps> = ({ patients, loading, onToggleStatus, onEdit }) => {
   const navigate = useNavigate();
-  
-  
+  const isAdmin = hasRole(["ADMIN"]);
+
+
   const columns = [
     {
       header: "Nombre",
@@ -55,6 +57,7 @@ const PatientTable: React.FC<PatientTableProps> = ({ patients, loading, onToggle
           <input
             type="checkbox"
             checked={patient.is_active}
+            disabled={!isAdmin}
             onChange={() => onToggleStatus(patient.id)}
           />
           <span className="slider"></span>
@@ -66,9 +69,11 @@ const PatientTable: React.FC<PatientTableProps> = ({ patients, loading, onToggle
       key: "actions",
       render: (patient: Patient) => (
         <div className="flex items-center justify-end gap-2">
-          <Button variant="ghost" onClick={() => onEdit(patient)}>
-            <img src="icons/edit.svg" width={16} alt="edit" className="icon-img-color" />
-          </Button>
+          {isAdmin && (
+            <Button variant="ghost" onClick={() => onEdit(patient)}>
+              <img src="icons/edit.svg" width={16} alt="edit" className="icon-img-color" />
+            </Button>
+          )}
           <Button variant="ghost" onClick={() => navigate(`/patients/${patient.id}`)}>
             <img src="icons/info.svg" width={16} alt="info" className="icon-img-color" />
           </Button>
