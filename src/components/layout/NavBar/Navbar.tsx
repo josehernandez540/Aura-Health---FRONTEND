@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../../../features/auth/store/auth.store';
 import { useThemeStore } from '../../../store/theme.store';
+import { useNotificationsStore } from '../../../store/notifications.store';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './navbar.css';
 
@@ -10,7 +11,16 @@ const Navbar: React.FC = () => {
 
   const { role, logout } = useAuthStore();
   const { theme, toggleTheme } = useThemeStore();
+  const { unreadCount, fetchUnreadCount, connect, disconnect } = useNotificationsStore();
   const [time, setTime] = useState<string>('');
+
+  useEffect(() => {
+    fetchUnreadCount();
+    connect();
+
+    return () => disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const updateClock = () => {
@@ -72,7 +82,9 @@ const Navbar: React.FC = () => {
           style={{ position: 'relative' }}
         >
           <img src="/icons/bell.svg" height="20" className="icon-img" alt="Notificaciones"/>
-          <span className="notif-badge"></span>
+          {unreadCount > 0 && (
+            <span className="notif-badge">{unreadCount > 9 ? '9+' : unreadCount}</span>
+          )}
         </button>
 
         <button

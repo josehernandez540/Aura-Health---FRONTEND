@@ -7,6 +7,7 @@ import AdminUsersPage from "../../../pages/AdminUsers.tsx";
 import AppointmentsPage from "../../../pages/Appointments.tsx";
 import RecordsPage from "../../../pages/Records.tsx";
 import TreatmentsPage from "../../../pages/Treatments.tsx";
+import NotificationsPage from "../../../pages/Notifications.tsx";
 
 interface SidebarItem {
   label: string;
@@ -110,8 +111,9 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
     items: [
       {
         label: 'Notificaciones',
-        path: '/notificaciones',
+        path: '/notifications',
         icon: 'bell.svg',
+        component: NotificationsPage
       },
       {
         label: 'Mi perfil',
