@@ -26,6 +26,7 @@ export interface MedicalRecordsResponse {
 export interface GetRecordsParams {
   search?: string;
   documentType?: DocumentType | "";
+  patientId?: string;
 }
 
 export const getMedicalRecords = async (

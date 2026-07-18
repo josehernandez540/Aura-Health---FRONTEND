@@ -5,18 +5,56 @@ import Button from "../components/ui/Button/Button";
 import { getInitials, avatarColors } from "../utils/tableUtils";
 import "./PatientDetail.css";
 import { getRiskInfo } from "../utils/risk";
+import { useRecordsList } from "../features/records/hooks/useRecords";
+import { downloadMedicalRecordFile } from "../features/records/services/record.service";
+import { useUIStore } from "../store/ui.store";
+import { hasRole } from "../utils/hasRole";
+import CreateAppointmentModal from "../features/appointments/components/CreateAppointmentModal";
+
+const DOCUMENT_TYPE_LABEL: Record<string, string> = {
+  HISTORIA_CLINICA: "Historia clínica",
+  EXAMEN: "Examen",
+  DIAGNOSTICO: "Diagnóstico",
+};
 
 const PatientDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [patient, setPatient] = useState<any>(null);
   const [activeTab, setActiveTab] = useState("appointments");
+  const [isCreateAppointmentOpen, setIsCreateAppointmentOpen] = useState(false);
+  const showToast = useUIStore((state) => state.showToast);
+  const isAdmin = hasRole(["ADMIN"]);
 
-  useEffect(() => {
+  const { records, loading: loadingRecords } = useRecordsList({ patientId: id ?? "" });
+
+  const fetchPatient = () => {
     if (id) {
       getPatientById(id).then(setPatient);
     }
-  }, [id]);
+  };
+
+  useEffect(fetchPatient, [id]);
+
+  const openRecordFile = async (recordId: string, fileName: string | null, mode: "view" | "download") => {
+    try {
+      const blob = await downloadMedicalRecordFile(recordId);
+      const url = URL.createObjectURL(blob);
+
+      if (mode === "view") {
+        window.open(url, "_blank");
+      } else {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName ?? "documento.pdf";
+        link.click();
+      }
+
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    } catch (error) {
+      showToast("Error al abrir el archivo", "error");
+    }
+  };
 
   if (!patient) return <div className="loading-state">Cargando expediente...</div>;
 
@@ -64,9 +102,17 @@ const PatientDetailPage: React.FC = () => {
             </div>
           </div>
           
-          <div className="sidebar-footer-actions">
-             <Button variant="primary" style={{width: '100%'}}>Nueva Cita</Button>
-          </div>
+          {isAdmin && (
+            <div className="sidebar-footer-actions">
+              <Button
+                variant="primary"
+                style={{ width: '100%' }}
+                onClick={() => setIsCreateAppointmentOpen(true)}
+              >
+                Nueva Cita
+              </Button>
+            </div>
+          )}
         </aside>
 
         <main className="patient-history-area">
@@ -74,9 +120,14 @@ const PatientDetailPage: React.FC = () => {
             <div className="history-title-row">
               <h1 className="section-title">Expediente Clínico</h1>
 
-              <span className={`risk-badge ${risk.className}`}>
-                Riesgo {risk.label}
-              </span>
+              <div className="risk-info-group">
+                <span className="disease-count-pill" title="Cantidad de enfermedades registradas">
+                  {patient.diseaseCount ?? 0} {patient.diseaseCount === 1 ? "enfermedad" : "enfermedades"}
+                </span>
+                <span className={`risk-badge ${risk.className}`}>
+                  Riesgo {risk.label}
+                </span>
+              </div>
             </div>
             <div className="tabs-container">
               <button 
@@ -85,11 +136,17 @@ const PatientDetailPage: React.FC = () => {
               >
                 Citas Médicas <span className="count-pill">{patient.appointments?.length || 0}</span>
               </button>
-              <button 
-                className={`tab-item ${activeTab === "treatments" ? "active" : ""}`} 
+              <button
+                className={`tab-item ${activeTab === "treatments" ? "active" : ""}`}
                 onClick={() => setActiveTab("treatments")}
               >
                 Tratamientos <span className="count-pill">{patient.treatments?.length || 0}</span>
+              </button>
+              <button
+                className={`tab-item ${activeTab === "records" ? "active" : ""}`}
+                onClick={() => setActiveTab("records")}
+              >
+                Historial PDF <span className="count-pill">{records.length}</span>
               </button>
             </div>
           </header>
@@ -145,9 +202,60 @@ const PatientDetailPage: React.FC = () => {
                 )}
               </div>
             )}
+
+            {activeTab === "records" && (
+              <div className="cards-feed">
+                {loadingRecords ? (
+                  <div className="empty-state-v2">Cargando historial...</div>
+                ) : records.length > 0 ? (
+                  records.map((record) => (
+                    <div key={record.id} className="record-card-v2">
+                      <div className="card-content">
+                        <div className="card-row-top">
+                          <span className="badge badge-gray">
+                            {record.documentType ? DOCUMENT_TYPE_LABEL[record.documentType] : "-"}
+                          </span>
+                          {record.isValidated ? (
+                            <span className="badge status-completed">✓ Válido</span>
+                          ) : (
+                            <span className="badge status-pending">⚠ Pendiente validar</span>
+                          )}
+                        </div>
+                        <h4 className="app-doctor">
+                          <img src="/icons/documents.svg" className="icon-img-sm" alt="" />
+                          {" "}{record.fileName ?? "Documento sin nombre"}
+                        </h4>
+                        <span className="app-specialty">
+                          Subido por {record.uploadedBy?.name ?? "-"} · {record.createdAt.slice(0, 10)}
+                        </span>
+                        <div className="treatment-footer" style={{ marginTop: 12, gap: 12 }}>
+                          <button className="back-link" onClick={() => openRecordFile(record.id, record.fileName, "view")}>
+                            Ver
+                          </button>
+                          <button className="back-link" onClick={() => openRecordFile(record.id, record.fileName, "download")}>
+                            Descargar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="empty-state-v2">No hay historiales PDF registrados.</div>
+                )}
+              </div>
+            )}
           </section>
         </main>
       </div>
+
+      {isAdmin && (
+        <CreateAppointmentModal
+          isOpen={isCreateAppointmentOpen}
+          initialPatientId={id}
+          onClose={() => setIsCreateAppointmentOpen(false)}
+          onSuccess={fetchPatient}
+        />
+      )}
     </div>
   );
 };

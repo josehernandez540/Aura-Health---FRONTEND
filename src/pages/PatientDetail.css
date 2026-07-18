@@ -165,6 +165,22 @@
     border-radius: 10px;
 }
 
+.risk-info-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.disease-count-pill {
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--txt2);
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
 .scrollable-panel {
     flex: 1;
     overflow-y: auto;
@@ -227,6 +243,14 @@
     padding: 10px;
     background: var(--bg);
     border-radius: var(--radius-sm);
+}
+
+.record-card-v2 {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
 }
 
 .treatment-card-v2 {

@@ -30,7 +30,7 @@ export const useRecordsList = (filters: GetRecordsParams) => {
     } finally {
       setLoading(false);
     }
-  }, [filters.search, filters.documentType, showToast]);
+  }, [filters.search, filters.documentType, filters.patientId, showToast]);
 
   useEffect(() => {
     fetchRecords();

@@ -12,6 +12,7 @@ import "./appointmentModal.css";
 interface CreateAppointmentModalProps {
   isOpen: boolean;
   initialDate?: string;
+  initialPatientId?: string;
   onClose: () => void;
   onSuccess?: () => void;
 }
@@ -19,6 +20,7 @@ interface CreateAppointmentModalProps {
 const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
   isOpen,
   initialDate,
+  initialPatientId,
   onClose,
   onSuccess,
 }) => {
@@ -45,10 +47,11 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
   useEffect(() => {
     if (!isOpen) {
       reset();
-    } else if (initialDate) {
-      setValue("date", initialDate);
+    } else {
+      if (initialDate) setValue("date", initialDate);
+      if (initialPatientId) setValue("patientId", initialPatientId);
     }
-  }, [isOpen, initialDate, reset, setValue]);
+  }, [isOpen, initialDate, initialPatientId, reset, setValue]);
 
   const handleSlotClick = (slotTime: string, slotEnd: string) => {
     setValue("startTime", slotTime, { shouldValidate: true });
@@ -104,6 +107,7 @@ const CreateAppointmentModal: React.FC<CreateAppointmentModalProps> = ({
             options={patientOptions}
             {...register("patientId")}
             error={errors.patientId?.message}
+            disabled={!!initialPatientId}
           />
 
           <SelectInput
