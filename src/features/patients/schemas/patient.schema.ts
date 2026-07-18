@@ -19,6 +19,11 @@ export const createPatientSchema = z.object({
   phone: z
     .string()
     .min(10, "El teléfono debe tener al menos 10 dígitos"),
+
+  diseaseCount: z.coerce
+    .number()
+    .int("Debe ser un número entero")
+    .min(0, "No puede ser negativo"),
 });
 
 export type PatientFormInput = z.infer<typeof createPatientSchema>;

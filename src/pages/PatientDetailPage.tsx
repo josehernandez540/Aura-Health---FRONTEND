@@ -4,6 +4,7 @@ import { getPatientById } from "../features/patients/services/patient.services";
 import Button from "../components/ui/Button/Button";
 import { getInitials, avatarColors } from "../utils/tableUtils";
 import "./PatientDetail.css";
+import { getRiskInfo } from "../utils/risk";
 
 const PatientDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,9 +20,9 @@ const PatientDetailPage: React.FC = () => {
 
   if (!patient) return <div className="loading-state">Cargando expediente...</div>;
 
+  const risk = getRiskInfo(patient.diseaseCount);
   return (
     <div className="patient-detail-page animate-fadeIn">
-      {/* Barra de Navegación Superior Limpia */}
       <nav className="detail-top-nav">
         <button onClick={() => navigate("/patients")} className="back-link">
           <img src="/icons/back.svg" alt="" className="icon-img-sm" />
@@ -33,7 +34,6 @@ const PatientDetailPage: React.FC = () => {
       </nav>
 
       <div className="detail-main-layout">
-        {/* SIDEBAR FIJO: Información crítica */}
         <aside className="patient-sidebar-sticky">
           <div className="profile-header-card">
             <div className="avatar-circle" style={{ background: avatarColors[0] }}>
@@ -69,10 +69,15 @@ const PatientDetailPage: React.FC = () => {
           </div>
         </aside>
 
-        {/* CONTENIDO SCROLLABLE: Historial Clínico */}
         <main className="patient-history-area">
           <header className="history-header">
-            <h1 className="section-title">Expediente Clínico</h1>
+            <div className="history-title-row">
+              <h1 className="section-title">Expediente Clínico</h1>
+
+              <span className={`risk-badge ${risk.className}`}>
+                Riesgo {risk.label}
+              </span>
+            </div>
             <div className="tabs-container">
               <button 
                 className={`tab-item ${activeTab === "appointments" ? "active" : ""}`} 

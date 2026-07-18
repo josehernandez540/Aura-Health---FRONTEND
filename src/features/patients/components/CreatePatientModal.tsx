@@ -72,6 +72,15 @@ const CreatePatientModal: React.FC<CreatePatientModalProps> = ({
             {...register("phone")}
             error={errors.phone?.message}
           />
+
+          <Input
+            label="Cantidad de enfermedades"
+            type="number"
+            min="0"
+            placeholder="0"
+            {...register("diseaseCount")}
+            error={errors.diseaseCount?.message}
+          />
         </div>
 
         <Input

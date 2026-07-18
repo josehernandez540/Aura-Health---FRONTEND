@@ -4,6 +4,7 @@ import Button from "../../../components/ui/Button/Button";
 import { type Patient } from '../services/patient.services';
 import { avatarColors, getInitials } from '../../../utils/tableUtils';
 import { useNavigate } from 'react-router-dom';
+import { getRiskInfo } from '../../../utils/risk';
 
 
 interface PatientTableProps {
@@ -31,16 +32,29 @@ const PatientTable: React.FC<PatientTableProps> = ({ patients, loading, onToggle
         </div>
       )
     },
-    { header: "Documento", key: "document_number", sortable: true,},
+    { header: "Documento", key: "document_number", sortable: true, },
     { header: "Email", key: "email", sortable: true, },
+    {
+      header: "Riesgo",
+      key: "risk",
+      render: (patient: Patient) => {
+        const risk = getRiskInfo(patient.diseaseCount);
+
+        return (
+          <span className={` ${risk.className}`} >
+            {risk.label}
+          </span>
+        );
+      },
+    },
     {
       header: "Estado",
       key: "is_active",
       render: (patient: Patient) => (
         <label className="switch">
-          <input 
-            type="checkbox" 
-            checked={patient.is_active} 
+          <input
+            type="checkbox"
+            checked={patient.is_active}
             onChange={() => onToggleStatus(patient.id)}
           />
           <span className="slider"></span>
@@ -64,7 +78,7 @@ const PatientTable: React.FC<PatientTableProps> = ({ patients, loading, onToggle
   ];
 
   return (
-    <DataTable 
+    <DataTable
       title="Listado de Pacientes"
       columns={columns}
       data={patients}

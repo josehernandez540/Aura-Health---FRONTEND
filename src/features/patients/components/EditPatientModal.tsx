@@ -15,7 +15,7 @@ interface EditPatientProps {
 
 const EditPatientModal: React.FC<EditPatientProps> = ({ isOpen, onClose, patient, onSuccess }) => {
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm();
-  const addToast = useUIStore((state) => state.addToast);
+  const toast = useUIStore((state) => state.showToast);
 
   useEffect(() => {
     if (patient) {
@@ -32,11 +32,11 @@ const EditPatientModal: React.FC<EditPatientProps> = ({ isOpen, onClose, patient
     if (!patient) return;
     try {
       await updatePatient(patient.id, data);
-      addToast("Paciente actualizado con éxito", "success");
+      toast("Paciente actualizado con éxito", "success");
       onSuccess();
       onClose();
     } catch (error) {
-      addToast("Error al actualizar el paciente", "error");
+      toast("Error al actualizar el paciente", "error");
     }
   };
 

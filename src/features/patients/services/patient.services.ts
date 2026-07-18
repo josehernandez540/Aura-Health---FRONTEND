@@ -7,6 +7,7 @@ export interface Patient {
   birthDate: string;
   email: string;
   phone: string;
+  diseaseCount: number;
   is_active?: boolean;
   createdAt?: string;
 }
@@ -43,26 +44,26 @@ export interface PatientDetail extends Patient {
 export type CreatePatientPayload = Omit<Patient, 'id' | 'is_active' | 'createdAt'>;
 
 export const createPatient = async (payload: CreatePatientPayload) => {
-  const { data } = await api.post<{ message: string }>("/v1/patients", payload);
+  const { data } = await api.post<{ message: string }>("/patients", payload);
   return data;
 };
 
 export const getPatients = async (): Promise<PatientsResponse> => {
-  const { data } = await api.get("/v1/patients");
+  const { data } = await api.get("/patients");
   return data.data;
 };
 
 export const updatePatient = async (id: string, patientData: Partial<Patient>) => {
-  const { data } = await api.patch(`/v1/patients/${id}`, patientData);
+  const { data } = await api.put(`/patients/${id}`, patientData);
   return data;
 };
 
 export const togglePatientStatus = async (id: string) => {
-  const { data } = await api.patch(`/v1/patients/${id}/status`);
+  const { data } = await api.patch(`/patients/${id}/status`);
   return data;
 };
 
 export const getPatientById = async (id: string): Promise<Patient> => {
-  const { data } = await api.get(`/v1/patients/${id}`);
+  const { data } = await api.get(`/patients/${id}`);
   return data.data;
 };
