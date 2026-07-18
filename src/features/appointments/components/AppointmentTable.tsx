@@ -10,6 +10,7 @@ interface AppointmentTableProps {
   onCancel: (appointment: Appointment) => void;
   onReschedule: (appointment: Appointment) => void;
   onNoShow: (appointment: Appointment) => void;
+  onHistory: (appointment: Appointment) => void;
 }
 
 const STATUS_INFO: Record<string, { label: string; className: string }> = {
@@ -25,8 +26,9 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
   onCancel,
   onReschedule,
   onNoShow,
+  onHistory,
 }) => {
-  const canCancel = hasRole(["ADMIN"]);
+  const isAdmin = hasRole(["ADMIN"]);
 
   const columns = [
     {
@@ -74,34 +76,46 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
       header: "Acciones",
       key: "actions",
       render: (appointment: Appointment) =>
-        canCancel && appointment.status === "SCHEDULED" ? (
+        isAdmin ? (
           <div className="flex items-center justify-end gap-2">
             <Button
               variant="ghost"
               style={{ width: "auto" }}
-              onClick={() => onReschedule(appointment)}
+              onClick={() => onHistory(appointment)}
             >
-              <img src="icons/date.svg" width={16} alt="reprogramar" className="icon-img-color" />
+              <img src="icons/info.svg" width={16} alt="historial" className="icon-img-color" />
             </Button>
-            <Button
-              variant="ghost"
-              style={{ width: "auto" }}
-              onClick={() => onNoShow(appointment)}
-            >
-              <img src="icons/warning.svg" width={16} alt="marcar inasistencia" className="icon-img-color" />
-            </Button>
-            <Button
-              variant="danger"
-              style={{ width: "auto" }}
-              onClick={() => onCancel(appointment)}
-            >
-              <img
-                src="icons/close.svg"
-                width={16}
-                alt="cancelar"
-                style={{ filter: "brightness(0) invert(1)" }}
-              />
-            </Button>
+
+            {appointment.status === "SCHEDULED" && (
+              <>
+                <Button
+                  variant="ghost"
+                  style={{ width: "auto" }}
+                  onClick={() => onReschedule(appointment)}
+                >
+                  <img src="icons/date.svg" width={16} alt="reprogramar" className="icon-img-color" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  style={{ width: "auto" }}
+                  onClick={() => onNoShow(appointment)}
+                >
+                  <img src="icons/warning.svg" width={16} alt="marcar inasistencia" className="icon-img-color" />
+                </Button>
+                <Button
+                  variant="danger"
+                  style={{ width: "auto" }}
+                  onClick={() => onCancel(appointment)}
+                >
+                  <img
+                    src="icons/close.svg"
+                    width={16}
+                    alt="cancelar"
+                    style={{ filter: "brightness(0) invert(1)" }}
+                  />
+                </Button>
+              </>
+            )}
           </div>
         ) : null,
     },
