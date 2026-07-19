@@ -26,7 +26,7 @@ const RecordsPage: React.FC = () => {
     <>
       <PageHeader
         title="Historial Clínico"
-        subtitle="REQ-09 Almacenamiento PDF · REQ-10 Consulta"
+        subtitle="Almacenamiento PDF · Consulta"
         onClick={isAdmin ? () => setIsUploadOpen(true) : undefined}
         textButton="Subir PDF"
       />

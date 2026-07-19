@@ -56,7 +56,7 @@ const UploadRecordModal: React.FC<UploadRecordModalProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="📤 Subir PDF Clínico — REQ-09"
+      title="Subir PDF Clínico"
       size="md"
       footer={
         <>
