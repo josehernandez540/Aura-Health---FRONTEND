@@ -207,3 +207,9 @@
 :root[data-theme="light"] .id-code {
   background: rgba(15, 23, 42, 0.06);
 }
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

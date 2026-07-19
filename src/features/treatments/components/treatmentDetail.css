@@ -39,3 +39,9 @@
   color: var(--txt2);
   margin-bottom: 8px;
 }
+
+@media (max-width: 768px) {
+  .treatment-detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

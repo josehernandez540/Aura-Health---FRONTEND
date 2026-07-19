@@ -53,3 +53,9 @@
   line-height: 1.5;
   margin: 0;
 }
+
+@media (max-width: 768px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+}

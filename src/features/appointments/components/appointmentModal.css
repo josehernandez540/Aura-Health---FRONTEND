@@ -67,3 +67,9 @@
 
 .slot-legend-dot.occupied { background: var(--danger); }
 .slot-legend-dot.selected { background: var(--accent); }
+
+@media (max-width: 768px) {
+  .slot-grid {
+    grid-template-columns: 1fr;
+  }
+}
