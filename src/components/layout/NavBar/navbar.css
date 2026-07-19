@@ -107,3 +107,30 @@
     display: none;
   }
 }
+
+@media (max-width: 480px) {
+  .topbar {
+    padding: 0 12px;
+  }
+  .topbar-left {
+    gap: 8px;
+  }
+  .topbar-right {
+    gap: 6px;
+  }
+  .topbar-right .btn {
+    padding: 5px 10px;
+    font-size: var(--fs-xs);
+  }
+  .theme-toggle {
+    width: 36px;
+    height: 20px;
+  }
+  .theme-toggle::after {
+    width: 14px;
+    height: 14px;
+  }
+  .theme-toggle.on::after {
+    transform: translateX(16px);
+  }
+}
