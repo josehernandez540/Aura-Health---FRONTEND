@@ -13,7 +13,7 @@ export const createAppointmentSchema = z
       .min(1, "La fecha es requerida")
       .refine((v) => !Number.isNaN(Date.parse(v)), "La fecha no es válida")
       .refine((v) => {
-        const d = new Date(v);
+        const d = new Date(`${v}T00:00:00`);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         return d >= today;
@@ -59,7 +59,7 @@ export const rescheduleAppointmentSchema = z
       .min(1, "La nueva fecha es requerida")
       .refine((v) => !Number.isNaN(Date.parse(v)), "La fecha no es válida")
       .refine((v) => {
-        const d = new Date(v);
+        const d = new Date(`${v}T00:00:00`);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         return d >= today;
