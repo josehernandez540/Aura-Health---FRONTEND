@@ -1,0 +1,212 @@
+.dash-empty {
+  font-size: var(--fs-sm);
+  color: var(--txt2);
+  margin-top: 20px;
+}
+
+.dash-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.dash-stat-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+.dash-stat-card.accent-green {
+  border-top-color: var(--success);
+}
+.dash-stat-card.accent-warning {
+  border-top-color: var(--warning);
+}
+.dash-stat-card.accent-danger {
+  border-top-color: var(--danger);
+}
+
+.dash-stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--txt);
+}
+.dash-stat-label {
+  font-size: var(--fs-sm);
+  color: var(--txt2);
+}
+
+.dash-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.dash-grid-single {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+@media (max-width: 900px) {
+  .dash-grid-2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dash-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.dash-card-title {
+  font-size: var(--fs-md);
+  color: var(--txt);
+  margin: 0 0 16px;
+}
+
+.dash-appointment-list,
+.dash-activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dash-appointment-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.dash-appointment-time {
+  font-weight: 700;
+  color: var(--accent);
+  font-size: var(--fs-sm);
+  flex-shrink: 0;
+}
+
+.dash-appointment-patient {
+  flex: 1;
+  font-size: var(--fs-base);
+  color: var(--txt);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-appointment-status {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+.dash-appointment-status.status-scheduled {
+  background: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+.dash-appointment-status.status-cancelled {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+}
+.dash-appointment-status.status-completed {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+}
+.dash-appointment-status.status-pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+}
+
+.dash-activity-list {
+  gap: 4px;
+}
+
+.dash-activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  transition: background var(--t-fast);
+  position: relative;
+}
+.dash-activity-item:hover {
+  background: var(--card);
+}
+.dash-activity-item:not(:last-child) {
+  border-bottom: 1px solid var(--border);
+}
+.dash-activity-item.is-unread .dash-activity-action {
+  font-weight: 600;
+  color: var(--txt);
+}
+
+.dash-activity-icon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+.dash-activity-icon img {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
+}
+.dash-activity-icon.tone-info {
+  background: rgba(59, 130, 246, 0.18);
+}
+.dash-activity-icon.tone-success {
+  background: rgba(16, 185, 129, 0.18);
+}
+.dash-activity-icon.tone-warning {
+  background: rgba(245, 158, 11, 0.18);
+}
+.dash-activity-icon.tone-danger {
+  background: rgba(239, 68, 68, 0.18);
+}
+
+.dash-activity-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.dash-activity-action {
+  font-size: var(--fs-base);
+  color: var(--txt2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dash-activity-meta {
+  font-size: var(--fs-xs);
+  color: var(--txt3);
+}
+
+.dash-activity-unread-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-top: 6px;
+}

@@ -10,6 +10,10 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  transition: margin-left var(--t-slow);
+}
+.app.sidebar-collapsed .main {
+  margin-left: var(--sidebar-w-collapsed);
 }
 .page {
   padding: var(--gap-lg);
@@ -18,7 +22,8 @@
   animation: fadeIn 0.4s ease-out;
 }
 @media (max-width: 1024px) {
-  .main {
+  .main,
+  .app.sidebar-collapsed .main {
     margin-left: 0;
   }
 }

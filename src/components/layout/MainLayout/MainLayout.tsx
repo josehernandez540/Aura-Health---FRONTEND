@@ -1,6 +1,7 @@
 import React from 'react';
 import Sidebar from '../SideBar/Sidebar';
 import Navbar from '../NavBar/Navbar';
+import { useSidebarStore } from '../../../store/sidebar.store';
 import './MainLayout.css';
 
 interface Props {
@@ -8,8 +9,10 @@ interface Props {
 }
 
 const MainLayout: React.FC<Props> = ({ children }) => {
+  const collapsed = useSidebarStore((state) => state.collapsed);
+
   return (
-    <div className="app">
+    <div className={`app ${collapsed ? "sidebar-collapsed" : ""}`}>
       <Sidebar />
 
       <main className="main">
