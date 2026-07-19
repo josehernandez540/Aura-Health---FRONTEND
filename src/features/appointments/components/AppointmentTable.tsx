@@ -1,6 +1,7 @@
 import React from "react";
 import DataTable from "../../../components/common/Datatable/Datatable";
 import Button from "../../../components/ui/Button/Button";
+import HoverMenu from "../../../components/ui/HoverMenu/HoverMenu";
 import AppointmentFilterBar from "./AppointmentFilterBar";
 import { type Appointment } from "../services/appointment.service";
 import { type AppointmentListFilters } from "../hooks/useAppointments";
@@ -92,7 +93,17 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
       key: "actions",
       render: (appointment: Appointment) =>
         canModify ? (
-          <div className="flex items-center justify-end gap-2">
+          <HoverMenu
+            trigger={
+              <Button variant="ghost" style={{ width: "auto" }} aria-label="Más acciones">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <circle cx="12" cy="5" r="2" />
+                  <circle cx="12" cy="12" r="2" />
+                  <circle cx="12" cy="19" r="2" />
+                </svg>
+              </Button>
+            }
+          >
             <Button
               variant="ghost"
               style={{ width: "auto" }}
@@ -143,7 +154,7 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
                 </Button>
               </>
             )}
-          </div>
+          </HoverMenu>
         ) : null,
     },
   ];

@@ -1,0 +1,71 @@
+.hover-menu-anchor {
+  position: relative;
+  display: inline-flex;
+}
+
+.hover-menu-panel {
+  position: fixed;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  animation: hover-menu-pop var(--t-fast);
+}
+
+.hover-menu-panel.align-right.place-above {
+  transform: translate(-100%, -100%);
+}
+
+.hover-menu-panel.align-left.place-above {
+  transform: translate(0, -100%);
+}
+
+.hover-menu-panel.align-right.place-below {
+  transform: translate(-100%, 0);
+}
+
+.hover-menu-panel.align-left.place-below {
+  transform: translate(0, 0);
+}
+
+.hover-menu-caret {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background: var(--surface2);
+  transform: rotate(45deg);
+}
+
+.hover-menu-panel.place-above .hover-menu-caret {
+  bottom: -5px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.hover-menu-panel.place-below .hover-menu-caret {
+  top: -5px;
+  border-left: 1px solid var(--border);
+  border-top: 1px solid var(--border);
+}
+
+.hover-menu-panel.align-right .hover-menu-caret {
+  right: 12px;
+}
+
+.hover-menu-panel.align-left .hover-menu-caret {
+  left: 12px;
+}
+
+@keyframes hover-menu-pop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
