@@ -246,6 +246,14 @@
   color: var(--txt3);
 }
 
+.calendar-scroll {
+  /* Without this, a grid/flex ancestor can let this box grow to its
+     content's intrinsic width instead of the card's available width,
+     so the overflow spills past the card edge instead of scrolling. */
+  min-width: 0;
+  max-width: 100%;
+}
+
 @media (max-width: 1024px) {
   .calendar-scroll {
     overflow-x: auto;
