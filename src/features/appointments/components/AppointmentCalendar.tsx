@@ -139,89 +139,91 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
         {isAdmin && <DoctorFilterSelect value={doctorFilter} onChange={setDoctorFilter} />}
       </div>
 
-      <div className="calendar-weekdays">
-        {WEEKDAYS.map((wd) => (
-          <span key={wd}>{wd}</span>
-        ))}
-      </div>
+      <div className="calendar-scroll">
+        <div className="calendar-weekdays">
+          {WEEKDAYS.map((wd) => (
+            <span key={wd}>{wd}</span>
+          ))}
+        </div>
 
-      <div className="calendar-grid">
-        {days.map((day) => {
-          const dateKey = toISODate(day);
-          const isOutside = day.getMonth() !== currentMonth.getMonth();
-          const isToday = dateKey === today;
-          const dayAppointments = appointmentsByDate.get(dateKey) ?? [];
-          const visible = dayAppointments.slice(0, MAX_PILLS_PER_DAY);
-          const overflow = dayAppointments.length - visible.length;
+        <div className="calendar-grid">
+          {days.map((day) => {
+            const dateKey = toISODate(day);
+            const isOutside = day.getMonth() !== currentMonth.getMonth();
+            const isToday = dateKey === today;
+            const dayAppointments = appointmentsByDate.get(dateKey) ?? [];
+            const visible = dayAppointments.slice(0, MAX_PILLS_PER_DAY);
+            const overflow = dayAppointments.length - visible.length;
 
-          return (
-            <div
-              key={dateKey}
-              className={`calendar-cell ${isOutside ? "outside" : ""} ${isToday ? "today" : ""} ${
-                dragOverDate === dateKey ? "drag-over" : ""
-              } ${overflow > 0 ? "has-overflow" : ""}`}
-              onClick={() => isAdmin && !isOutside && onCreateOnDate(dateKey)}
-              onDragOver={(e) => {
-                if (!canModify || isOutside) return;
-                e.preventDefault();
-                setDragOverDate(dateKey);
-              }}
-              onDragLeave={() => setDragOverDate(null)}
-              onDrop={(e) => handleDrop(e, dateKey, isOutside)}
-            >
-              <span className="calendar-day-number">
-                {isToday && <span className="calendar-today-dot" />}
-                {day.getDate()}
-              </span>
+            return (
+              <div
+                key={dateKey}
+                className={`calendar-cell ${isOutside ? "outside" : ""} ${isToday ? "today" : ""} ${
+                  dragOverDate === dateKey ? "drag-over" : ""
+                } ${overflow > 0 ? "has-overflow" : ""}`}
+                onClick={() => isAdmin && !isOutside && onCreateOnDate(dateKey)}
+                onDragOver={(e) => {
+                  if (!canModify || isOutside) return;
+                  e.preventDefault();
+                  setDragOverDate(dateKey);
+                }}
+                onDragLeave={() => setDragOverDate(null)}
+                onDrop={(e) => handleDrop(e, dateKey, isOutside)}
+              >
+                <span className="calendar-day-number">
+                  {isToday && <span className="calendar-today-dot" />}
+                  {day.getDate()}
+                </span>
 
-              {!loading &&
-                visible.map((appointment) => (
-                  <div
-                    key={appointment.id}
-                    className={`calendar-pill ${STATUS_CLASS[appointment.status] ?? ""}`}
-                    draggable={canModify && appointment.status === "SCHEDULED"}
-                    onDragStart={(e) => {
-                      e.stopPropagation();
-                      handleDragStart(e, appointment);
-                    }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onQuickView(appointment);
-                    }}
-                  >
-                    {appointment.startTime} {appointment.patient?.name}
-                  </div>
-                ))}
-
-              {overflow > 0 && (
-                <>
-                  <span className="calendar-pill-more">+{overflow} más</span>
-
-                  <div className="calendar-day-popover" onClick={(e) => e.stopPropagation()}>
-                    <div className="calendar-day-popover-header">
-                      {day.toLocaleDateString("es-CO", { weekday: "long", day: "numeric", month: "long" })}
-                      <span className="count-pill">{dayAppointments.length}</span>
+                {!loading &&
+                  visible.map((appointment) => (
+                    <div
+                      key={appointment.id}
+                      className={`calendar-pill ${STATUS_CLASS[appointment.status] ?? ""}`}
+                      draggable={canModify && appointment.status === "SCHEDULED"}
+                      onDragStart={(e) => {
+                        e.stopPropagation();
+                        handleDragStart(e, appointment);
+                      }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onQuickView(appointment);
+                      }}
+                    >
+                      {appointment.startTime} {appointment.patient?.name}
                     </div>
-                    <div className="calendar-day-popover-list">
-                      {dayAppointments.map((appointment) => (
-                        <div
-                          key={appointment.id}
-                          className={`calendar-pill ${STATUS_CLASS[appointment.status] ?? ""}`}
-                          onClick={() => onQuickView(appointment)}
-                        >
-                          <span>{appointment.startTime} {appointment.patient?.name}</span>
-                          <span className="calendar-day-popover-status">
-                            {STATUS_LABEL[appointment.status] ?? appointment.status}
-                          </span>
-                        </div>
-                      ))}
+                  ))}
+
+                {overflow > 0 && (
+                  <>
+                    <span className="calendar-pill-more">+{overflow} más</span>
+
+                    <div className="calendar-day-popover" onClick={(e) => e.stopPropagation()}>
+                      <div className="calendar-day-popover-header">
+                        {day.toLocaleDateString("es-CO", { weekday: "long", day: "numeric", month: "long" })}
+                        <span className="count-pill">{dayAppointments.length}</span>
+                      </div>
+                      <div className="calendar-day-popover-list">
+                        {dayAppointments.map((appointment) => (
+                          <div
+                            key={appointment.id}
+                            className={`calendar-pill ${STATUS_CLASS[appointment.status] ?? ""}`}
+                            onClick={() => onQuickView(appointment)}
+                          >
+                            <span>{appointment.startTime} {appointment.patient?.name}</span>
+                            <span className="calendar-day-popover-status">
+                              {STATUS_LABEL[appointment.status] ?? appointment.status}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
-            </div>
-          );
-        })}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {canModify && (
