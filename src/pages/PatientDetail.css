@@ -94,6 +94,13 @@
     gap: 16px;
 }
 
+.sidebar-footer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 24px;
+}
+
 .info-slot label {
     display: block;
     font-size: 10px;

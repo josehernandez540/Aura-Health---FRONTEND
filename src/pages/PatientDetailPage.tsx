@@ -10,6 +10,7 @@ import { downloadMedicalRecordFile } from "../features/records/services/record.s
 import { useUIStore } from "../store/ui.store";
 import { hasRole } from "../utils/hasRole";
 import CreateAppointmentModal from "../features/appointments/components/CreateAppointmentModal";
+import { useDownloadPatientReport } from "../features/reports/hooks/useReports";
 
 const DOCUMENT_TYPE_LABEL: Record<string, string> = {
   HISTORIA_CLINICA: "Historia clínica",
@@ -25,6 +26,8 @@ const PatientDetailPage: React.FC = () => {
   const [isCreateAppointmentOpen, setIsCreateAppointmentOpen] = useState(false);
   const showToast = useUIStore((state) => state.showToast);
   const isAdmin = hasRole(["ADMIN"]);
+  const canGenerateReport = hasRole(["ADMIN", "DOCTOR"]);
+  const { downloadReport, downloadingId } = useDownloadPatientReport();
 
   const { records, loading: loadingRecords } = useRecordsList({ patientId: id ?? "" });
 
@@ -102,15 +105,28 @@ const PatientDetailPage: React.FC = () => {
             </div>
           </div>
           
-          {isAdmin && (
+          {(isAdmin || canGenerateReport) && (
             <div className="sidebar-footer-actions">
-              <Button
-                variant="primary"
-                style={{ width: '100%' }}
-                onClick={() => setIsCreateAppointmentOpen(true)}
-              >
-                Nueva Cita
-              </Button>
+              {isAdmin && (
+                <Button
+                  variant="primary"
+                  style={{ width: '100%' }}
+                  onClick={() => setIsCreateAppointmentOpen(true)}
+                >
+                  Nueva Cita
+                </Button>
+              )}
+
+              {canGenerateReport && (
+                <Button
+                  variant="ghost"
+                  style={{ width: '100%' }}
+                  isLoading={downloadingId === id}
+                  onClick={() => id && downloadReport(id, patient.name)}
+                >
+                  Generar Reporte
+                </Button>
+              )}
             </div>
           )}
         </aside>
