@@ -17,8 +17,6 @@ import MainLayout from '../components/layout/MainLayout/MainLayout';
 import PatientDetailPage from '../pages/PatientDetailPage';
 import TreatmentDetailPage from '../pages/TreatmentDetailPage';
 
-const Dashboard: React.FC = () => <div>Perfil Example</div>;
-
 const generateProtectedRoutes = (): RouteObject[] => {
   const routes: RouteObject[] = [];
 
@@ -60,10 +58,6 @@ export const router = createBrowserRouter([
     ),
     children: [
       ...generateProtectedRoutes(),
-      { 
-        path: '/profile', 
-        element: <RoleGuard allowedRoles={['ADMIN', 'DOCTOR']}><Dashboard /></RoleGuard> 
-      },
       {
         path: '/patients/:id',
         element: <RoleGuard allowedRoles={['ADMIN', 'DOCTOR']}><PatientDetailPage /></RoleGuard>
