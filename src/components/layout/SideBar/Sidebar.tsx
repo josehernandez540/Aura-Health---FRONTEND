@@ -22,6 +22,7 @@ const Sidebar: React.FC = () => {
 
         <button
           className="sidebar-toggle"
+          data-tour="sidebar-toggle"
           onClick={toggleCollapsed}
           title={collapsed ? "Expandir menú" : "Colapsar menú"}
           aria-label={collapsed ? "Expandir menú" : "Colapsar menú"}
@@ -46,6 +47,7 @@ const Sidebar: React.FC = () => {
                 <NavLink
                   to={item.path}
                   key={item.path}
+                  data-tour={`nav-${item.path}`}
                   className={({ isActive }) =>
                     `nav-item ${isActive ? "active" : ""}`
                   }

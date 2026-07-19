@@ -1,0 +1,75 @@
+.aura-tour-popover.driver-popover {
+  background-color: var(--surface);
+  color: var(--txt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg, 0 10px 30px rgba(0, 0, 0, 0.35));
+  max-width: 320px;
+  padding: 18px;
+}
+
+.aura-tour-popover .driver-popover-title {
+  font-size: var(--fs-md);
+  color: var(--txt);
+  font-weight: 700;
+}
+
+.aura-tour-popover .driver-popover-description {
+  font-size: var(--fs-sm);
+  color: var(--txt2);
+  line-height: 1.5;
+}
+
+.aura-tour-popover .driver-popover-progress-text {
+  color: var(--txt3);
+  font-size: var(--fs-xs);
+}
+
+.aura-tour-popover .driver-popover-close-btn {
+  color: var(--txt3);
+}
+.aura-tour-popover .driver-popover-close-btn:hover,
+.aura-tour-popover .driver-popover-close-btn:focus {
+  color: var(--txt);
+}
+
+.aura-tour-popover .driver-popover-footer-btn {
+  background-color: var(--card);
+  color: var(--txt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+.aura-tour-popover .driver-popover-footer-btn:hover,
+.aura-tour-popover .driver-popover-footer-btn:focus {
+  background-color: var(--border);
+}
+
+.aura-tour-popover .driver-popover-next-btn,
+.aura-tour-popover .driver-popover-done-btn {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+.aura-tour-popover .driver-popover-next-btn:hover,
+.aura-tour-popover .driver-popover-done-btn:hover {
+  filter: brightness(1.1);
+}
+
+/* Only recolor the one side each variant actually shows — driver.css sets
+   the other three to transparent on these same classes, and a blanket
+   border-color override here would undo that and draw a solid square. */
+.aura-tour-popover .driver-popover-arrow-side-left {
+  border-left-color: var(--surface);
+}
+.aura-tour-popover .driver-popover-arrow-side-right {
+  border-right-color: var(--surface);
+}
+.aura-tour-popover .driver-popover-arrow-side-top {
+  border-top-color: var(--surface);
+}
+.aura-tour-popover .driver-popover-arrow-side-bottom {
+  border-bottom-color: var(--surface);
+}

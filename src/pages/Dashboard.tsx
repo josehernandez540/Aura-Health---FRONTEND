@@ -179,7 +179,7 @@ const Dashboard: React.FC = () => {
         <p className="dash-empty">Cargando panel...</p>
       ) : data.role === "ADMIN" ? (
         <>
-          <div className="dash-stats-grid">
+          <div className="dash-stats-grid" data-tour="dashboard-stats">
             <StatCard icon="user-group.svg" value={data.stats.totalPatients} label="Pacientes activos" />
             <StatCard icon="identification.svg" value={data.stats.totalDoctors} label="Médicos activos" />
             <StatCard icon="date.svg" value={data.stats.appointmentsToday} label="Citas hoy" />
@@ -195,7 +195,7 @@ const Dashboard: React.FC = () => {
       ) : (
         <>
           {data.stats && (
-            <div className="dash-stats-grid">
+            <div className="dash-stats-grid" data-tour="dashboard-stats">
               <StatCard icon="date.svg" value={data.stats.appointmentsToday} label="Citas hoy" />
               <StatCard icon="chart-bar.svg" value={data.stats.appointmentsThisWeek} label="Citas esta semana" />
               <StatCard icon="document-search.svg" value={data.stats.completedThisMonth} label="Completadas este mes" accent="accent-green" />
