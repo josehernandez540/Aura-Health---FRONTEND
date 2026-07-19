@@ -99,3 +99,18 @@
 .modal-close-btn:hover {
   color: var(--txt);
 }
+
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .modal-footer {
+    flex-wrap: wrap;
+  }
+
+  .modal-footer button {
+    max-width: none;
+    flex: 1;
+  }
+}
