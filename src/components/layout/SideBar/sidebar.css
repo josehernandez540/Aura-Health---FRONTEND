@@ -259,6 +259,23 @@
   .sidebar.collapsed .avatar {
     display: flex;
   }
+  /* Reset layout rules for collapsed state when drawer is open on mobile */
+  .sidebar.collapsed .brand {
+    flex-direction: row;
+    padding: 24px 20px 20px;
+    gap: 12px;
+  }
+  .sidebar.collapsed .nav-item {
+    justify-content: flex-start;
+    padding: 9px 12px;
+  }
+  .sidebar.collapsed .sidebar-toggle {
+    margin-left: auto;
+  }
+  .sidebar.collapsed .sidebar-user-card {
+    justify-content: flex-start;
+    padding: var(--gap-sm);
+  }
 
   .sidebar-backdrop {
     display: block;
