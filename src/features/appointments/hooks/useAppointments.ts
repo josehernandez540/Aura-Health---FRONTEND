@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -10,6 +10,8 @@ import {
   type RescheduleAppointmentFormInput,
   noShowAppointmentSchema,
   type NoShowAppointmentFormInput,
+  completeAppointmentSchema,
+  type CompleteAppointmentFormInput,
 } from "../schemas/appointment.schema";
 import {
   getAppointments,
@@ -17,6 +19,7 @@ import {
   cancelAppointment,
   rescheduleAppointment,
   markNoShow,
+  completeAppointment,
   type Appointment,
 } from "../services/appointment.service";
 import { useUIStore } from "../../../store/ui.store";
@@ -38,28 +41,66 @@ const addMinutes = (time: string, minutes: number) => {
   return `${hh}:${mm}`;
 };
 
+export interface AppointmentListFilters {
+  status: string;
+  date: string;
+}
+
+export const PAGE_SIZE_OPTIONS = [10, 25, 50];
+
 export const useAppointmentsList = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [limit, setLimit] = useState<number>(PAGE_SIZE_OPTIONS[0]);
+  const [filters, setFilters] = useState<AppointmentListFilters>({ status: "", date: "" });
   const showToast = useUIStore((state) => state.showToast);
 
-  const fetchAppointments = async () => {
+  const fetchAppointments = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await getAppointments();
+      const data = await getAppointments({
+        page,
+        limit,
+        status: filters.status || undefined,
+        date: filters.date || undefined,
+      });
       setAppointments(data.items);
+      setTotalPages(data.totalPages);
     } catch (error) {
       showToast("Error al cargar las citas", "error");
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit, filters.status, filters.date, showToast]);
 
   useEffect(() => {
     fetchAppointments();
-  }, []);
+  }, [fetchAppointments]);
 
-  return { appointments, loading, fetchAppointments };
+  const updateFilters = (name: keyof AppointmentListFilters, value: string) => {
+    setPage(1);
+    setFilters((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const updateLimit = (value: number) => {
+    setPage(1);
+    setLimit(value);
+  };
+
+  return {
+    appointments,
+    loading,
+    page,
+    totalPages,
+    limit,
+    filters,
+    updateFilters,
+    updateLimit,
+    setPage,
+    fetchAppointments,
+  };
 };
 
 export const useCalendarAppointments = (monthDate: Date) => {
@@ -328,6 +369,48 @@ export const useMarkNoShow = (
     } catch (error: any) {
       const message =
         error.response?.data?.message || "Error al marcar la inasistencia";
+      showToast(message, "error");
+    }
+  };
+
+  return {
+    register,
+    handleSubmit: handleSubmit(onSubmit),
+    errors,
+    isSubmitting,
+    reset,
+  };
+};
+
+export const useCompleteAppointment = (
+  appointmentId: string | null,
+  onSuccess?: () => void
+) => {
+  const showToast = useUIStore((state) => state.showToast);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<CompleteAppointmentFormInput>({
+    resolver: zodResolver(completeAppointmentSchema),
+    defaultValues: { notes: "" },
+  });
+
+  const onSubmit = async (data: CompleteAppointmentFormInput) => {
+    if (!appointmentId) return;
+
+    try {
+      await completeAppointment(appointmentId, data.notes || undefined);
+      showToast("Cita marcada como completada", "success");
+
+      if (onSuccess) onSuccess();
+
+      reset();
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || "Error al completar la cita";
       showToast(message, "error");
     }
   };

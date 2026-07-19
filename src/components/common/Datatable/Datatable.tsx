@@ -19,6 +19,13 @@ interface DataTableProps {
   data: any[];
   isLoading: boolean;
   rowsPerPage?: number;
+  // Controlled/server-side pagination: when both are provided, `data` is
+  // treated as already being the current page's rows (no local slicing or
+  // sorting — sorting only the current page of a server-paginated list
+  // would be misleading), and page changes are delegated to the caller.
+  page?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
 }
 
 const DataTable: React.FC<DataTableProps> = ({
@@ -27,7 +34,12 @@ const DataTable: React.FC<DataTableProps> = ({
   data,
   isLoading,
   rowsPerPage = 5,
+  page,
+  totalPages: controlledTotalPages,
+  onPageChange,
 }) => {
+  const isControlled = page !== undefined && onPageChange !== undefined;
+
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<{
     key: string | null;
@@ -38,6 +50,8 @@ const DataTable: React.FC<DataTableProps> = ({
   });
 
   const sortedData = useMemo(() => {
+    if (isControlled) return data;
+
     const sortableItems = [...data];
     if (sortConfig.key) {
       sortableItems.sort((a, b) => {
@@ -50,16 +64,29 @@ const DataTable: React.FC<DataTableProps> = ({
       });
     }
     return sortableItems;
-  }, [data, sortConfig]);
+  }, [data, sortConfig, isControlled]);
 
-  const totalPages = Math.ceil(sortedData.length / rowsPerPage);
+  const activePage = isControlled ? page : currentPage;
+  const totalPages = isControlled
+    ? Math.max(1, controlledTotalPages ?? 1)
+    : Math.ceil(sortedData.length / rowsPerPage);
 
   const paginatedData = useMemo(() => {
+    if (isControlled) return sortedData;
     const start = (currentPage - 1) * rowsPerPage;
     return sortedData.slice(start, start + rowsPerPage);
-  }, [sortedData, currentPage, rowsPerPage]);
+  }, [sortedData, currentPage, rowsPerPage, isControlled]);
+
+  const goToPage = (next: number) => {
+    if (isControlled) {
+      onPageChange!(next);
+    } else {
+      setCurrentPage(next);
+    }
+  };
 
   const requestSort = (key: string) => {
+    if (isControlled) return;
     setSortConfig((prev) => ({
       key,
       direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
@@ -121,20 +148,20 @@ const DataTable: React.FC<DataTableProps> = ({
       {!isLoading && data.length > 0 && (
         <div className="pagination-container">
           <span className="pagination-info">
-            Página {currentPage} de {totalPages}
+            Página {activePage} de {totalPages}
           </span>
           <div className="flex gap-2">
             <button
               className="btn-pagination"
-              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
+              onClick={() => goToPage(Math.max(1, activePage - 1))}
+              disabled={activePage === 1}
             >
               <img src="icons/back.svg" className="icon-img" width={16} />
             </button>
             <button
               className="btn-pagination"
-              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages}
+              onClick={() => goToPage(Math.min(totalPages, activePage + 1))}
+              disabled={activePage === totalPages}
             >
               <img src="icons/next.svg" className="icon-img" width={16} />
             </button>

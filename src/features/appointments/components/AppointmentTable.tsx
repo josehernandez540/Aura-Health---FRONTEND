@@ -1,7 +1,9 @@
 import React from "react";
 import DataTable from "../../../components/common/Datatable/Datatable";
 import Button from "../../../components/ui/Button/Button";
+import AppointmentFilterBar from "./AppointmentFilterBar";
 import { type Appointment } from "../services/appointment.service";
+import { type AppointmentListFilters } from "../hooks/useAppointments";
 import { hasRole } from "../../../utils/hasRole";
 
 interface AppointmentTableProps {
@@ -10,7 +12,15 @@ interface AppointmentTableProps {
   onCancel: (appointment: Appointment) => void;
   onReschedule: (appointment: Appointment) => void;
   onNoShow: (appointment: Appointment) => void;
+  onComplete: (appointment: Appointment) => void;
   onHistory: (appointment: Appointment) => void;
+  filters: AppointmentListFilters;
+  onFilterChange: (name: keyof AppointmentListFilters, value: string) => void;
+  limit: number;
+  onLimitChange: (value: number) => void;
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 const STATUS_INFO: Record<string, { label: string; className: string }> = {
@@ -26,7 +36,15 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
   onCancel,
   onReschedule,
   onNoShow,
+  onComplete,
   onHistory,
+  filters,
+  onFilterChange,
+  limit,
+  onLimitChange,
+  page,
+  totalPages,
+  onPageChange,
 }) => {
   const canModify = hasRole(["ADMIN", "DOCTOR"]);
 
@@ -34,12 +52,10 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
     {
       header: "Paciente",
       key: "patient.name",
-      sortable: true,
     },
     {
       header: "Médico",
       key: "doctor.name",
-      sortable: true,
       render: (appointment: Appointment) => (
         <span>
           {appointment.doctor?.name}
@@ -52,7 +68,6 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
     {
       header: "Fecha",
       key: "date",
-      sortable: true,
       render: (appointment: Appointment) => appointment.date.slice(0, 10),
     },
     {
@@ -103,6 +118,18 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
                   <img src="icons/warning.svg" width={16} alt="marcar inasistencia" className="icon-img-color" />
                 </Button>
                 <Button
+                  variant="success"
+                  style={{ width: "auto" }}
+                  onClick={() => onComplete(appointment)}
+                >
+                  <img
+                    src="icons/success.svg"
+                    width={16}
+                    alt="marcar como completada"
+                    style={{ filter: "brightness(0) invert(1)" }}
+                  />
+                </Button>
+                <Button
                   variant="danger"
                   style={{ width: "auto" }}
                   onClick={() => onCancel(appointment)}
@@ -122,12 +149,24 @@ const AppointmentTable: React.FC<AppointmentTableProps> = ({
   ];
 
   return (
-    <DataTable
-      title="Listado de Citas"
-      columns={columns}
-      data={appointments}
-      isLoading={loading}
-    />
+    <>
+      <AppointmentFilterBar
+        filters={filters}
+        onChange={onFilterChange}
+        limit={limit}
+        onLimitChange={onLimitChange}
+      />
+
+      <DataTable
+        title="Listado de Citas"
+        columns={columns}
+        data={appointments}
+        isLoading={loading}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={onPageChange}
+      />
+    </>
   );
 };
 

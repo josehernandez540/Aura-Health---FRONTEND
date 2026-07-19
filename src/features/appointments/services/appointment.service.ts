@@ -27,6 +27,7 @@ export interface GetAppointmentsParams {
   dateFrom?: string;
   dateTo?: string;
   status?: string;
+  page?: number;
   limit?: number;
 }
 
@@ -82,6 +83,14 @@ export const markNoShow = async (id: string, reason?: string) => {
   const { data } = await api.patch<{ message: string }>(
     `/appointments/${id}/no-show`,
     { reason }
+  );
+  return data;
+};
+
+export const completeAppointment = async (id: string, notes?: string) => {
+  const { data } = await api.patch<{ message: string }>(
+    `/appointments/${id}/complete`,
+    { notes }
   );
   return data;
 };

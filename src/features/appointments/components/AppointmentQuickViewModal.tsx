@@ -9,6 +9,7 @@ interface AppointmentQuickViewModalProps {
   onClose: () => void;
   onReschedule: (appointment: Appointment) => void;
   onNoShow: (appointment: Appointment) => void;
+  onComplete: (appointment: Appointment) => void;
   onCancel: (appointment: Appointment) => void;
   onHistory: (appointment: Appointment) => void;
 }
@@ -25,6 +26,7 @@ const AppointmentQuickViewModal: React.FC<AppointmentQuickViewModalProps> = ({
   onClose,
   onReschedule,
   onNoShow,
+  onComplete,
   onCancel,
   onHistory,
 }) => {
@@ -69,6 +71,9 @@ const AppointmentQuickViewModal: React.FC<AppointmentQuickViewModalProps> = ({
                 </Button>
                 <Button variant="ghost" onClick={() => onNoShow(appointment)}>
                   Marcar inasistencia
+                </Button>
+                <Button variant="success" onClick={() => onComplete(appointment)}>
+                  Marcar completada
                 </Button>
                 <Button variant="danger" onClick={() => onCancel(appointment)}>
                   Cancelar

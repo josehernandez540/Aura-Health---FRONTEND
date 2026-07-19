@@ -8,6 +8,7 @@ import CreateAppointmentModal from "../features/appointments/components/CreateAp
 import CancelAppointmentModal from "../features/appointments/components/CancelAppointmentModal";
 import RescheduleAppointmentModal from "../features/appointments/components/RescheduleAppointmentModal";
 import NoShowAppointmentModal from "../features/appointments/components/NoShowAppointmentModal";
+import CompleteAppointmentModal from "../features/appointments/components/CompleteAppointmentModal";
 import { useAppointmentsList, useCalendarAppointments } from "../features/appointments/hooks/useAppointments";
 import {
   rescheduleAppointment,
@@ -29,9 +30,21 @@ const AppointmentsPage: React.FC = () => {
   const [cancelTarget, setCancelTarget] = useState<Appointment | null>(null);
   const [rescheduleTarget, setRescheduleTarget] = useState<Appointment | null>(null);
   const [noShowTarget, setNoShowTarget] = useState<Appointment | null>(null);
+  const [completeTarget, setCompleteTarget] = useState<Appointment | null>(null);
   const [quickViewTarget, setQuickViewTarget] = useState<Appointment | null>(null);
   const [historyTargetId, setHistoryTargetId] = useState<string | null>(null);
-  const { appointments, loading, fetchAppointments } = useAppointmentsList();
+  const {
+    appointments,
+    loading,
+    page,
+    totalPages,
+    limit,
+    filters,
+    updateFilters,
+    updateLimit,
+    setPage,
+    fetchAppointments,
+  } = useAppointmentsList();
   const {
     appointments: calendarAppointments,
     loading: calendarLoading,
@@ -103,7 +116,15 @@ const AppointmentsPage: React.FC = () => {
           onCancel={setCancelTarget}
           onReschedule={setRescheduleTarget}
           onNoShow={setNoShowTarget}
+          onComplete={setCompleteTarget}
           onHistory={(appointment) => setHistoryTargetId(appointment.id)}
+          filters={filters}
+          onFilterChange={updateFilters}
+          limit={limit}
+          onLimitChange={updateLimit}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={setPage}
         />
       ) : (
         <AppointmentCalendar
@@ -148,6 +169,13 @@ const AppointmentsPage: React.FC = () => {
             onSuccess={refetchAll}
           />
 
+          <CompleteAppointmentModal
+            isOpen={!!completeTarget}
+            appointmentId={completeTarget?.id ?? null}
+            onClose={() => setCompleteTarget(null)}
+            onSuccess={refetchAll}
+          />
+
           <AppointmentHistoryModal
             appointmentId={historyTargetId}
             onClose={() => setHistoryTargetId(null)}
@@ -165,6 +193,10 @@ const AppointmentsPage: React.FC = () => {
         onNoShow={(appointment) => {
           setQuickViewTarget(null);
           setNoShowTarget(appointment);
+        }}
+        onComplete={(appointment) => {
+          setQuickViewTarget(null);
+          setCompleteTarget(appointment);
         }}
         onCancel={(appointment) => {
           setQuickViewTarget(null);

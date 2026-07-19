@@ -100,3 +100,14 @@ export const noShowAppointmentSchema = z.object({
 });
 
 export type NoShowAppointmentFormInput = z.infer<typeof noShowAppointmentSchema>;
+
+export const completeAppointmentSchema = z.object({
+  notes: z
+    .string()
+    .trim()
+    .max(500, "Las notas no pueden superar los 500 caracteres")
+    .optional()
+    .or(z.literal("")),
+});
+
+export type CompleteAppointmentFormInput = z.infer<typeof completeAppointmentSchema>;
