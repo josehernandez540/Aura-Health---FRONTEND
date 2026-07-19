@@ -1,5 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap');
 
+/*
+ * Responsive breakpoints (max-width, desktop-first). Use exactly these
+ * three values in every new/modified media query in this project —
+ * do not introduce other cutoffs (e.g. 640px, 900px):
+ *   1024px — tablet landscape
+ *   768px  — tablet portrait
+ *   480px  — phone
+ * These cannot be CSS custom properties: @media cannot read :root vars
+ * in plain CSS (no PostCSS in this project).
+ */
+
 :root {
   --bg:       #0b0f1a;
   --surface:  #121828;

@@ -11,9 +11,6 @@
   z-index: 100;
   transition: width var(--t-slow), transform var(--t-slow);
 }
-.sidebar.hidden {
-  transform: translateX(-100%);
-}
 
 .sidebar.collapsed {
   width: var(--sidebar-w-collapsed);
@@ -233,4 +230,48 @@
 .user-role {
   font-size: var(--fs-xs);
   color: var(--txt3);
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  /* On mobile the drawer always opens at full width, regardless of the
+     desktop-only "collapsed" (icon-only) preference. */
+  .sidebar.collapsed {
+    width: var(--sidebar-w);
+  }
+  .sidebar.collapsed .brand-text,
+  .sidebar.collapsed .nav-section-label,
+  .sidebar.collapsed .nav-label,
+  .sidebar.collapsed .user-info {
+    display: unset;
+    opacity: 1;
+    max-width: none;
+  }
+  .sidebar.collapsed .avatar {
+    display: flex;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    z-index: 199;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--t);
+  }
+  .sidebar-backdrop.visible {
+    opacity: 1;
+    pointer-events: all;
+  }
 }
