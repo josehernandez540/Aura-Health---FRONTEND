@@ -8,6 +8,9 @@ import AppointmentsPage from "../../../pages/Appointments.tsx";
 import RecordsPage from "../../../pages/Records.tsx";
 import TreatmentsPage from "../../../pages/Treatments.tsx";
 import NotificationsPage from "../../../pages/Notifications.tsx";
+import ReportsPage from "../../../pages/Reports.tsx";
+import AnalyticsPage from "../../../pages/Analytics.tsx";
+import ProfilePage from "../../../pages/Profile.tsx";
 
 interface SidebarItem {
   label: string;
@@ -97,11 +100,13 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
         label: 'Reportes',
         path: '/reports',
         icon: 'document-plus.svg',
+        component: ReportsPage
       },
       {
         label: 'Analiticas',
         path: '/analiticas',
         icon: 'chart-pie.svg',
+        component: AnalyticsPage
       },
     ],
   },
@@ -117,13 +122,9 @@ export const SIDEBAR_CONFIG: SidebarSection[] = [
       },
       {
         label: 'Mi perfil',
-        path: '/perfil',
+        path: '/profile',
         icon: 'setting.svg',
-      },
-      {
-        label: 'Mis Analiticas',
-        path: '/mis-analiticas',
-        icon: 'chart-pie.svg',
+        component: ProfilePage
       },
     ]
   },
