@@ -24,7 +24,10 @@ export interface GetAppointmentsParams {
   doctorId?: string;
   patientId?: string;
   date?: string;
+  dateFrom?: string;
+  dateTo?: string;
   status?: string;
+  limit?: number;
 }
 
 export type CreateAppointmentPayload = {
@@ -40,6 +43,7 @@ export const getAppointments = async (
   params?: GetAppointmentsParams
 ): Promise<AppointmentsResponse> => {
   const { data } = await api.get("/appointments", { params });
+  console.log("getAppointments data:", data.data);
   return data.data;
 };
 

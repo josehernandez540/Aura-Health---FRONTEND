@@ -8,7 +8,7 @@ import CreateAppointmentModal from "../features/appointments/components/CreateAp
 import CancelAppointmentModal from "../features/appointments/components/CancelAppointmentModal";
 import RescheduleAppointmentModal from "../features/appointments/components/RescheduleAppointmentModal";
 import NoShowAppointmentModal from "../features/appointments/components/NoShowAppointmentModal";
-import { useAppointmentsList } from "../features/appointments/hooks/useAppointments";
+import { useAppointmentsList, useCalendarAppointments } from "../features/appointments/hooks/useAppointments";
 import {
   rescheduleAppointment,
   type Appointment,
@@ -20,6 +20,10 @@ const AppointmentsPage: React.FC = () => {
   const isAdmin = hasRole(["ADMIN"]);
   const canModify = hasRole(["ADMIN", "DOCTOR"]);
   const [view, setView] = useState<"list" | "calendar">("list");
+  const [calendarMonth, setCalendarMonth] = useState(() => {
+    const d = new Date();
+    return new Date(d.getFullYear(), d.getMonth(), 1);
+  });
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [createDate, setCreateDate] = useState<string | undefined>(undefined);
   const [cancelTarget, setCancelTarget] = useState<Appointment | null>(null);
@@ -28,7 +32,17 @@ const AppointmentsPage: React.FC = () => {
   const [quickViewTarget, setQuickViewTarget] = useState<Appointment | null>(null);
   const [historyTargetId, setHistoryTargetId] = useState<string | null>(null);
   const { appointments, loading, fetchAppointments } = useAppointmentsList();
+  const {
+    appointments: calendarAppointments,
+    loading: calendarLoading,
+    fetchAppointments: fetchCalendarAppointments,
+  } = useCalendarAppointments(calendarMonth);
   const showToast = useUIStore((state) => state.showToast);
+
+  const refetchAll = () => {
+    fetchAppointments();
+    fetchCalendarAppointments();
+  };
 
   const openCreateOnDate = (date: string) => {
     setCreateDate(date);
@@ -43,7 +57,7 @@ const AppointmentsPage: React.FC = () => {
         newEndTime: appointment.endTime,
       });
       showToast("Cita reprogramada correctamente", "success");
-      fetchAppointments();
+      refetchAll();
     } catch (error: any) {
       const message =
         error.response?.data?.message || "Error al reprogramar la cita";
@@ -93,11 +107,12 @@ const AppointmentsPage: React.FC = () => {
         />
       ) : (
         <AppointmentCalendar
-          appointments={appointments}
-          loading={loading}
+          appointments={calendarAppointments}
+          loading={calendarLoading}
           onCreateOnDate={openCreateOnDate}
           onQuickView={setQuickViewTarget}
           onDropReschedule={handleDropReschedule}
+          onMonthChange={setCalendarMonth}
         />
       )}
 
@@ -106,7 +121,7 @@ const AppointmentsPage: React.FC = () => {
           isOpen={isCreateOpen}
           initialDate={createDate}
           onClose={() => setIsCreateOpen(false)}
-          onSuccess={fetchAppointments}
+          onSuccess={refetchAll}
         />
       )}
 
@@ -116,21 +131,21 @@ const AppointmentsPage: React.FC = () => {
             isOpen={!!cancelTarget}
             appointmentId={cancelTarget?.id ?? null}
             onClose={() => setCancelTarget(null)}
-            onSuccess={fetchAppointments}
+            onSuccess={refetchAll}
           />
 
           <RescheduleAppointmentModal
             isOpen={!!rescheduleTarget}
             appointment={rescheduleTarget}
             onClose={() => setRescheduleTarget(null)}
-            onSuccess={fetchAppointments}
+            onSuccess={refetchAll}
           />
 
           <NoShowAppointmentModal
             isOpen={!!noShowTarget}
             appointmentId={noShowTarget?.id ?? null}
             onClose={() => setNoShowTarget(null)}
-            onSuccess={fetchAppointments}
+            onSuccess={refetchAll}
           />
 
           <AppointmentHistoryModal

@@ -20,6 +20,7 @@ import {
   type Appointment,
 } from "../services/appointment.service";
 import { useUIStore } from "../../../store/ui.store";
+import { buildMonthGrid, toISODate } from "../utils/calendarGrid";
 
 export const SLOT_DURATION_MINUTES = 30;
 
@@ -57,6 +58,36 @@ export const useAppointmentsList = () => {
   useEffect(() => {
     fetchAppointments();
   }, []);
+
+  return { appointments, loading, fetchAppointments };
+};
+
+export const useCalendarAppointments = (monthDate: Date) => {
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const showToast = useUIStore((state) => state.showToast);
+
+  const { dateFrom, dateTo } = useMemo(() => {
+    const days = buildMonthGrid(monthDate);
+    return { dateFrom: toISODate(days[0]), dateTo: toISODate(days[days.length - 1]) };
+  }, [monthDate]);
+
+  const fetchAppointments = async () => {
+    try {
+      setLoading(true);
+      const data = await getAppointments({ dateFrom, dateTo, limit: 300 });
+      setAppointments(data.items);
+    } catch (error) {
+      showToast("Error al cargar las citas del calendario", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchAppointments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dateFrom, dateTo]);
 
   return { appointments, loading, fetchAppointments };
 };

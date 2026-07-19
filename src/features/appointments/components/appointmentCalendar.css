@@ -70,7 +70,7 @@
 
 .calendar-weekdays {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(120px, 1fr));
   gap: 1px;
   font-size: var(--fs-xs);
   color: var(--txt3);
@@ -84,7 +84,7 @@
 
 .calendar-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(7, minmax(120px, 1fr));
   gap: 1px;
   background: var(--border);
   border: 1px solid var(--border);
@@ -94,6 +94,7 @@
 .calendar-cell {
   background: var(--card);
   min-height: 92px;
+  min-width: 0;
   padding: 6px;
   display: flex;
   flex-direction: column;
@@ -205,6 +206,8 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  min-width: 0;
+  max-width: 100%;
   cursor: grab;
 }
 

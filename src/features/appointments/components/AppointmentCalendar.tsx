@@ -1,8 +1,9 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import SelectInput from "../../../components/ui/Inputs/SelectInput";
 import { useMedicos } from "../../doctor/hooks/useDoctorsList";
 import { type Appointment } from "../services/appointment.service";
 import { hasRole } from "../../../utils/hasRole";
+import { buildMonthGrid, toISODate } from "../utils/calendarGrid";
 import "./appointmentCalendar.css";
 
 interface AppointmentCalendarProps {
@@ -11,6 +12,7 @@ interface AppointmentCalendarProps {
   onCreateOnDate: (date: string) => void;
   onQuickView: (appointment: Appointment) => void;
   onDropReschedule: (appointment: Appointment, newDate: string) => void;
+  onMonthChange: (monthDate: Date) => void;
 }
 
 const WEEKDAYS = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
@@ -21,25 +23,6 @@ const STATUS_CLASS: Record<string, string> = {
   COMPLETED: "status-completed",
   CANCELLED: "status-cancelled",
   NO_SHOW: "status-pending",
-};
-
-const pad = (n: number) => String(n).padStart(2, "0");
-const toISODate = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-
-const buildMonthGrid = (monthDate: Date): Date[] => {
-  const year = monthDate.getFullYear();
-  const month = monthDate.getMonth();
-  const firstOfMonth = new Date(year, month, 1);
-  const startOffset = (firstOfMonth.getDay() + 6) % 7; // Monday = 0
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
-
-  const gridStart = new Date(year, month, 1 - startOffset);
-  return Array.from({ length: totalCells }, (_, i) => {
-    const d = new Date(gridStart);
-    d.setDate(gridStart.getDate() + i);
-    return d;
-  });
 };
 
 interface DoctorFilterSelectProps {
@@ -79,6 +62,7 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
   onCreateOnDate,
   onQuickView,
   onDropReschedule,
+  onMonthChange,
 }) => {
   const isAdmin = hasRole(["ADMIN"]);
   const canModify = hasRole(["ADMIN", "DOCTOR"]);
@@ -89,6 +73,11 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
   });
   const [doctorFilter, setDoctorFilter] = useState("");
   const [dragOverDate, setDragOverDate] = useState<string | null>(null);
+
+  useEffect(() => {
+    onMonthChange(currentMonth);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentMonth]);
 
   const days = useMemo(() => buildMonthGrid(currentMonth), [currentMonth]);
 
