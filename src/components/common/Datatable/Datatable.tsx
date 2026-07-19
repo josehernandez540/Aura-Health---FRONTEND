@@ -129,7 +129,7 @@ const DataTable: React.FC<DataTableProps> = ({
             {paginatedData.map((item, rowIndex) => (
               <tr key={item.id || rowIndex}>
                 {columns.map((col, colIndex) => (
-                  <td key={colIndex}>
+                  <td key={colIndex} data-label={col.header}>
                     {col.render ? (
                       col.render(item, rowIndex)
                     ) : (
