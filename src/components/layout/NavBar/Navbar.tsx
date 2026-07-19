@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '../../../features/auth/store/auth.store';
 import { useThemeStore } from '../../../store/theme.store';
 import { useNotificationsStore } from '../../../store/notifications.store';
+import { useSidebarStore } from '../../../store/sidebar.store';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './navbar.css';
 
@@ -12,6 +13,7 @@ const Navbar: React.FC = () => {
   const { role, logout } = useAuthStore();
   const { theme, toggleTheme } = useThemeStore();
   const { unreadCount, fetchUnreadCount, connect, disconnect } = useNotificationsStore();
+  const { toggleMobileOpen } = useSidebarStore();
   const [time, setTime] = useState<string>('');
 
   useEffect(() => {
@@ -51,6 +53,15 @@ const Navbar: React.FC = () => {
   return (
     <header className="topbar">
       <div className="topbar-left">
+        <button
+          type="button"
+          className="navbar-hamburger"
+          onClick={toggleMobileOpen}
+          aria-label="Abrir menú"
+        >
+          <img src="/icons/bars-3.svg" alt="" className="icon-img" />
+        </button>
+
         <div className="topbar-title">
           {getTitle()}
         </div>
